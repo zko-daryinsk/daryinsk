@@ -56,7 +56,7 @@ const dict = {
         mainBtn: "➕ Қосу", favBtn: "⭐ Таңдаулы", viewTabs: "👁‍🗨 Вкладкалар", viewSelect: "👁‍🗨 Тізім",
         noResults: "Ештеңе табылмады", callMob: "Қоңырау шалу", callGov: "Қалалық нөмірге қоңырау",
         numCopied: "Нөмір буферге көшірілді!", shareCopied: "Сілтеме көшірілді! Достарыңызға жіберіңіз.",
-        confirmErr: "Бұл контактідегі қате туралы әкімшіге хабарлағыңыз келе ме?",
+        confirmErr: "Бұл контактідеғы қате туралы әкімшіге хабарлағыңыз келе ме?",
         mTitle: "Жаңа сауалнама формасы", mCustomOpt: "Санатты өз қолыңызбен жазу...",
         lblHasWA: "Бұл нөмірде WhatsApp бар", mSubmit: "WhatsApp-қа жіберу", mAlert: "Санатты, Атауды және Телефонды толтырыңыз!"
     }
@@ -73,7 +73,7 @@ function normalizeString(str) {
 }
 
 // ==========================================
-// БЛОК 2: МОТОР ЯДРА (БЫВШИЙ MOD_CORE.JS)
+// БЛОК 2: МОТОР ЯДРА
 // ==========================================
 function initApp() {
     console.log("=== Запуск интернет-ядра справочника ===");
@@ -97,7 +97,10 @@ function loadVillages() {
             if (window.app.villages.length === 0) {
                 window.app.villages.push({ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское ауылы" });
             }
+            
+            // ИСПРАВЛЕНО ТУТ: Теперь жестко берем ID первого элемента массива сёл
             window.app.activeVillage = window.app.villages[0].id;
+            
             renderVillageSelector();
             loadBazaByVillage(window.app.activeVillage);
         })
@@ -161,7 +164,7 @@ function loadBazaByVillage(villageId) {
         });
 }
 // ==========================================
-// БЛОК 3: ОТРИСОВКА КАРТОЧЕК (БЫВШИЙ MOD_CARDS.JS)
+// БЛОК 3: ОТРИСОВКА КАРТОЧЕК
 // ==========================================
 function clearDot(str) { if (!str || str.trim() === ".") return ""; return str.trim(); }
 
@@ -255,49 +258,6 @@ function renderCards() {
         card.innerHTML = html; container.appendChild(card);
     });
 }
-// ==========================================
-// БЛОК 4: ДЕЙСТВИЯ И ИНТЕРФЕЙС (ЧАСТЬ 1)
-// ==========================================
-let touchStartX = 0, touchStartY = 0;
-window.addEventListener("touchstart", function(e) { touchStartX = e.changedTouches.screenX; touchStartY = e.changedTouches.screenY; }, { passive: true });
-window.addEventListener("touchend", function(e) {
-    const sInput = document.getElementById("searchInput");
-    if (window.app.currentViewMode !== "tabs" || (sInput && sInput.value.length > 0)) return;
-    if (document.getElementById("welcomeModal") || (document.getElementById("addModal") && document.getElementById("addModal").style.display === "flex")) return;
-    const diffX = touchStartX - e.changedTouches.screenX; const diffY = touchStartY - e.changedTouches.screenY;
-    if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45) {
-        const categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
-        let idx = categories.indexOf(window.app.activeCategory);
-        if (categories.length > 0) {
-            if (diffX > 0) { idx = (idx < categories.length - 1) ? idx + 1 : 0; }
-            else if (diffX < 0) { idx = (idx > 0) ? idx - 1 : categories.length - 1; }
-            window.app.activeCategory = categories[idx]; window.app.activeLetter = ""; setLang(window.app.currentLang); window.scrollTo({ top: 0, behavior: "instant" });
-            setTimeout(function() { const activeTab = document.querySelector(".tab.active"); if (activeTab) activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, 50);
-        }
-    }
-}, { passive: true });
-
-function openModal(id) { const m = document.getElementById(id); if (m) m.style.display = "flex"; }
-function closeModal(id, e) { if (e) e.stopPropagation(); const m = document.getElementById(id); if (m) m.style.display = "none"; }
-function copyNumberOnly(n) { navigator.clipboard.writeText(n).then(function() { alert(dict[window.app.currentLang].numCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = n; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].numCopied); }); }
-function copyToClipboard(t) { navigator.clipboard.writeText(t).then(function() { alert(dict[window.app.currentLang].shareCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].shareCopied); }); }
-function toggleFavorite(p) { var f = JSON.parse(localStorage.getItem("dar_fav_numbers") || "[]"); f = f.includes(p) ? f.filter(function(x) { return x !== p; }) : [...f, p]; localStorage.setItem("dar_fav_numbers", JSON.stringify(f)); renderCards(); }
-function reportErrorWithConfirm(c, t, p) { if (confirm(dict[window.app.currentLang].confirmErr)) { var msg = "Найдена ошибка в контакте:\nКатегория: " + c + "\nНазвание: " + t + "\nТелефон: " + p + "\n\nОпишите правильные данные: "; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent(msg); } }
-
-function buildFormCategorySelect(cats) {
-    var s = document.getElementById("formCatSelect"); if (!s) return; s.innerHTML = "";
-    cats.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.innerText = (categoryTranslations[c] && categoryTranslations[c][window.app.currentLang]) ? categoryTranslations[c][window.app.currentLang] : c; s.appendChild(o); });
-    var co = document.createElement("option"); co.value = "CUSTOM_OPTION"; co.innerText = dict[window.app.currentLang].mCustomOpt; s.appendChild(co); toggleCustomCategoryField();
-}
-function toggleCustomCategoryField() { var s = document.getElementById("formCatSelect"); var w = document.getElementById("customCatWrapper"); if (s && w) w.style.display = (s.value === "CUSTOM_OPTION") ? "block" : "none"; }
-function sendNewContact() {
-    var sv = document.getElementById("formCatSelect").value; var cat = (sv === "CUSTOM_OPTION") ? document.getElementById("formCatCustom").value.trim() : sv;
-    var rp = document.getElementById("formPhone").value.trim(); var t = document.getElementById("formName").value.trim(); var pd = getClean10Digits(rp);
-    if (!cat || !pd || !t) { alert(dict[window.app.currentLang].mAlert); return; }
-    var hasWA = document.getElementById("formHasWA").checked; var line = cat.toUpperCase() + " | " + t + " | " + pd + " | " + document.getElementById("formFio").value.trim() + " | " + document.getElementById("formDesc").value.trim() + " | " + document.getElementById("formLoc").value.trim() + " | " + (hasWA ? "$" : "NO_WA");
-    var btn = document.getElementById("btnSubmitForm"); btn.disabled = true; btn.innerText = "..."; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent("Здравствуйте! Прошу добавить контакт.\n\n" + line);
-    setTimeout(function() { btn.disabled = false; btn.innerText = dict[window.app.currentLang].mSubmit; closeModal("addModal"); }, 2000);
-}
 function setLang(l) {
     window.app.currentLang = l; document.querySelectorAll(".lang-btn").forEach(function(b) { b.classList.remove("active"); });
     var ab = document.getElementById("btn-" + l); if (ab) ab.classList.add("active");
@@ -335,7 +295,6 @@ function changeWelcomeLang(l) {
     }
     const wm = document.getElementById("welcomeModal"); if (wm) { wm.querySelectorAll(".lang-btn").forEach(function(x) { x.classList.remove("active"); if (x.innerText.toLowerCase() === l) x.classList.add("active"); }); }
 }
-
 function resetSearch() {
     const sInput = document.getElementById("searchInput"); if (sInput) sInput.value = "";
     const btnReset = document.getElementById("btnReset"); if (btnReset) btnReset.style.display = "none";
@@ -359,8 +318,23 @@ function renderAlphabet(uniqueLetters) {
     });
 }
 
+function toggleCategoriesView() {
+    const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return;
+    if (window.app.currentViewMode === "tabs") { window.app.currentViewMode = "select"; tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; }
+    else { window.app.currentViewMode = "tabs"; tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; }
+    localStorage.setItem("dar_view_mode", window.app.currentViewMode);
+}
+function restoreViewMode() {
+    const saved = localStorage.getItem("dar_view_mode"); if (saved) { window.app.currentViewMode = saved; }
+    const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return;
+    if (window.app.currentViewMode === "select") { tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; }
+    else { tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; }
+}
+function handleSelectCategoryChange() { const mainSel = document.getElementById("categoriesMainSelect"); if (mainSel) { window.app.activeCategory = mainSel.value; window.app.activeLetter = ""; renderCards(); } }
+
 window.onscroll = function() { var btnTop = document.getElementById("btnTop"); if (btnTop) btnTop.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none"; };
 function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 window.addEventListener("scroll", function() { var sInput = document.getElementById("searchInput"); if (sInput && document.activeElement === sInput) sInput.blur(); });
 function initTracking() { var img = document.createElement("img"); img.src = "https://yadro.ru" + escape(document.URL) + ";" + Math.random(); img.style.display = "none"; document.body.appendChild(img); }
 function toggleTheme() { document.body.classList.toggle("dark-mode"); }
+
