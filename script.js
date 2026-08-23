@@ -1,7 +1,7 @@
 // ==========================================
 // БЛОК 1: ГЛОБАЛЬНЫЙ КОНФИГ И СЛОВАРИ
 // ==========================================
-const adminPhone = "77054133907";
+const adminPhone = "77058120376";
 
 window.app = {
     allContacts: [],
@@ -10,7 +10,7 @@ window.app = {
     currentLang: "ru",
     currentViewMode: "tabs",
     villages: [],
-    activeVillage: ""
+    activeVillage: "darinsk"
 };
 
 const categoryTranslations = {
@@ -71,12 +71,10 @@ function normalizeString(str) {
         .replace(/h/g, "х").replace(/һ/g, "х")
         .replace(/[^a-z0-9а-яё]/g, "");
 }
-
 // ==========================================
 // БЛОК 2: МОТОР ЯДРА
 // ==========================================
 function initApp() {
-    console.log("=== Запуск интернет-ядра справочника ===");
     restoreViewMode();
     loadVillages();
 }
@@ -91,16 +89,10 @@ function loadVillages() {
                 if (!trimmed || trimmed.startsWith("#")) return;
                 const cells = trimmed.split("|").map(function(c) { return c.trim(); });
                 if (cells.length >= 3) {
-                    window.app.villages.push({ id: cells[0], ru: cells[1], kz: cells[2] });
+                    window.app.villages.push({ id: cells, ru: cells, kz: cells });
                 }
             });
-            if (window.app.villages.length === 0) {
-                window.app.villages.push({ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское ауылы" });
-            }
-            
-            // ИСПРАВЛЕНО ТУТ: Теперь жестко берем ID первого элемента массива сёл
-            window.app.activeVillage = window.app.villages[0].id;
-            
+            window.app.activeVillage = "darinsk";
             renderVillageSelector();
             loadBazaByVillage(window.app.activeVillage);
         })
@@ -128,7 +120,6 @@ function renderVillageSelector() {
         container.appendChild(btn);
     });
 }
-
 function loadBazaByVillage(villageId) {
     const fileName = "baza_" + villageId + ".txt";
     fetch(fileName + "?v=" + new Date().getTime())
@@ -141,15 +132,15 @@ function loadBazaByVillage(villageId) {
                 if (!trimmed || trimmed.startsWith("#")) return;
                 const cells = trimmed.split("|").map(function(c) { return c.trim(); });
                 if (cells.length === 7) {
-                    rawCategories.add(cells[0].toUpperCase());
+                    rawCategories.add(cells.toUpperCase());
                     window.app.allContacts.push({
-                        category: cells[0].toUpperCase(), title: cells[1], phone: cells[2],
-                        fio: cells[3], desc: cells[4], landmark: cells[5], waStatus: cells[6]
+                        category: cells.toUpperCase(), title: cells, phone: cells,
+                        fio: cells, desc: cells, landmark: cells, waStatus: cells
                     });
                 }
             });
             const sortedCategories = [...rawCategories].sort(function(a, b) { return a.localeCompare(b); });
-            window.app.activeCategory = sortedCategories.length > 0 ? sortedCategories[0] : "";
+            window.app.activeCategory = sortedCategories.length > 0 ? sortedCategories : "";
             window.app.activeLetter = "";
             const currentV = window.app.villages.find(function(v) { return v.id === villageId; });
             if (currentV) { document.getElementById("siteTitle").innerText = window.app.currentLang === "ru" ? currentV.ru : currentV.kz; }
@@ -163,6 +154,7 @@ function loadBazaByVillage(villageId) {
             setLang(window.app.currentLang);
         });
 }
+
 // ==========================================
 // БЛОК 3: ОТРИСОВКА КАРТОЧЕК
 // ==========================================
@@ -174,7 +166,6 @@ function getClean10Digits(rawPhone) {
     if (digits.length >= 10) { digits = digits.substring(digits.length - 10); }
     return digits;
 }
-
 function formatPhoneNumber(pure10Digits) {
     if (pure10Digits.length !== 10) return pure10Digits;
     if (pure10Digits.startsWith("71131")) {
@@ -216,14 +207,14 @@ function renderCards() {
         if (existing) { if (item.phone) existing.phones.push({ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio }); }
         else { grouped.push({ category: item.category, title: item.title, fio: item.fio, desc: item.desc, landmark: item.landmark, phones: item.phone ? [{ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio }] : [] }); }
     });
-    grouped.forEach(function(item) {
+        grouped.forEach(function(item) {
         if (!item.phones || item.phones.length === 0) return;
         const card = document.createElement("div"); card.className = "card";
         const tag = (categoryTranslations[item.category] && categoryTranslations[item.category][window.app.currentLang]) ? categoryTranslations[item.category][window.app.currentLang] : item.category;
-        const p10 = getClean10Digits(item.phones[0].num);
+        const p10 = getClean10Digits(item.phones.num);
         let html = "<div class='card-header-row'><span class='card-tag'>" + tag + "</span><button class='card-fav-btn " + (favorites.includes(p10) ? "active" : "") + "' onclick=\"toggleFavorite('" + p10 + "')\">★</button></div><div class='card-title'>" + item.title + "</div>";
         if (clearDot(item.fio) && item.phones.length === 1) html += "<div class='card-fio'>" + clearDot(item.fio) + "</div>";
-        if (item.phones.length === 1 && clearDot(item.desc)) html += "<div class='card-desc'>" + clearDot(item.desc) + "</div>";
+        if (item.phones.length === 1 && clearDot(item.phones.desc)) html += "<div class='card-desc'>" + clearDot(item.phones.desc) + "</div>";
         if (clearDot(item.landmark)) html += "<div class='card-landmark'>📍 " + clearDot(item.landmark) + "</div>";
         item.phones.forEach(function(pObj) {
             const pure10 = getClean10Digits(pObj.num);
@@ -251,13 +242,56 @@ function renderCards() {
         const curUrl = window.location.origin + window.location.pathname;
         const allNums = item.phones.map(function(p) { return formatPhoneNumber(getClean10Digits(p.num)); }).join(", ");
         const sTxt = clearDot(item.title) + ". Тел: " + allNums + ". Справочник: " + curUrl;
-        html += "<div class='card-actions-row-three' style='display:flex; gap:6px; margin-top:14px; border-top:1px dashed #ccc; padding-top:10px;'>" +
-            "<button class='btn-ui-mini' style='background:#6c757d; flex:1;' onclick=\"copyToClipboard('" + sTxt.replace(/'/g, "\\'") + "')\">🔗 Поделиться</button>" +
-            "<button class='btn-ui-mini' style='background:#2563eb; flex:1;' onclick=\"downloadVCard('" + item.category + "', '" + item.title.replace(/'/g, "\\'") + "', '" + p10 + "', '" + item.fio.replace(/'/g, "\\'") + "')\">📥 Сохранить</button>" +
+        html += "<div class='card-actions-row-three' style='display:flex; gap:6px; margin-top:14px; border-top:1px dashed #ccc; padding-top:10px;'>\n" +
+            "<button class='btn-ui-mini' style='background:#6c757d; flex:1;' onclick=\"copyToClipboard('" + sTxt.replace(/'/g, "\\'") + "')\">🔗 Поделиться</button>\n" +
+            "<button class='btn-ui-mini' style='background:#2563eb; flex:1;' onclick=\"downloadVCard('" + item.category + "', '" + item.title.replace(/'/g, "\\'") + "', '" + p10 + "', '" + item.fio.replace(/'/g, "\\'") + "')\">📥 Сохранить</button>\n" +
             "<button class='btn-ui-mini' style='background:#dc2626; flex:1;' onclick=\"reportErrorWithConfirm('" + item.category + "', '" + item.title.replace(/'/g, "\\'") + "', '" + allNums + "')\">⚠️ Ошибка</button></div>";
         card.innerHTML = html; container.appendChild(card);
     });
 }
+// ==========================================
+// БЛОК 4: ДЕЙСТВИЯ И ИНТЕРФЕЙС
+// ==========================================
+let touchStartX = 0, touchStartY = 0;
+window.addEventListener("touchstart", function(e) { touchStartX = e.changedTouches.screenX; touchStartY = e.changedTouches.screenY; }, { passive: true });
+window.addEventListener("touchend", function(e) {
+    const sInput = document.getElementById("searchInput");
+    if (window.app.currentViewMode !== "tabs" || (sInput && sInput.value.length > 0)) return;
+    if (document.getElementById("welcomeModal") || (document.getElementById("addModal") && document.getElementById("addModal").style.display === "flex")) return;
+    const diffX = touchStartX - e.changedTouches.screenX; const diffY = touchStartY - e.changedTouches.screenY;
+    if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45) {
+        const categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
+        let idx = categories.indexOf(window.app.activeCategory);
+        if (categories.length > 0) {
+            if (diffX > 0) { idx = (idx < categories.length - 1) ? idx + 1 : 0; }
+            else if (diffX < 0) { idx = (idx > 0) ? idx - 1 : categories.length - 1; }
+            window.app.activeCategory = categories[idx]; window.app.activeLetter = ""; setLang(window.app.currentLang); window.scrollTo({ top: 0, behavior: "instant" });
+            setTimeout(function() { const activeTab = document.querySelector(".tab.active"); if (activeTab) activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, 50);
+        }
+    }
+}, { passive: true });
+
+function openModal(id) { const m = document.getElementById(id); if (m) m.style.display = "flex"; }
+function closeModal(id, e) { if (e) e.stopPropagation(); const m = document.getElementById(id); if (m) m.style.display = "none"; }
+function copyNumberOnly(n) { navigator.clipboard.writeText(n).then(function() { alert(dict[window.app.currentLang].numCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = n; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].numCopied); }); }
+function copyToClipboard(t) { navigator.clipboard.writeText(t).then(function() { alert(dict[window.app.currentLang].shareCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].shareCopied); }); }
+function toggleFavorite(p) { var f = JSON.parse(localStorage.getItem("dar_fav_numbers") || "[]"); f = f.includes(p) ? f.filter(function(x) { return x !== p; }) : [...f, p]; localStorage.setItem("dar_fav_numbers", JSON.stringify(f)); renderCards(); }
+function reportErrorWithConfirm(c, t, p) { if (confirm(dict[window.app.currentLang].confirmErr)) { var msg = "Найдена ошибка в контакте:\nКатегория: " + c + "\nНазвание: " + t + "\nТелефон: " + p + "\n\nОпишите правильные данные: "; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent(msg); } }
+function buildFormCategorySelect(cats) {
+    var s = document.getElementById("formCatSelect"); if (!s) return; s.innerHTML = "";
+    cats.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.innerText = (categoryTranslations[c] && categoryTranslations[c][window.app.currentLang]) ? categoryTranslations[c][window.app.currentLang] : c; s.appendChild(o); });
+    var co = document.createElement("option"); co.value = "CUSTOM_OPTION"; co.innerText = dict[window.app.currentLang].mCustomOpt; s.appendChild(co); toggleCustomCategoryField();
+}
+function toggleCustomCategoryField() { var s = document.getElementById("formCatSelect"); var w = document.getElementById("customCatWrapper"); if (s && w) w.style.display = (s.value === "CUSTOM_OPTION") ? "block" : "none"; }
+function sendNewContact() {
+    var sv = document.getElementById("formCatSelect").value; var cat = (sv === "CUSTOM_OPTION") ? document.getElementById("formCatCustom").value.trim() : sv;
+    var rp = document.getElementById("formPhone").value.trim(); var t = document.getElementById("formName").value.trim(); var pd = getClean10Digits(rp);
+    if (!cat || !pd || !t) { alert(dict[window.app.currentLang].mAlert); return; }
+    var hasWA = document.getElementById("formHasWA").checked; var line = cat.toUpperCase() + " | " + t + " | " + pd + " | " + document.getElementById("formFio").value.trim() + " | " + document.getElementById("formDesc").value.trim() + " | " + document.getElementById("formLoc").value.trim() + " | " + (hasWA ? "$" : "NO_WA");
+    var btn = document.getElementById("btnSubmitForm"); btn.disabled = true; btn.innerText = "..."; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent("Здравствуйте! Прошу добавить контакт.\n\n" + line);
+    setTimeout(function() { btn.disabled = false; btn.innerText = dict[window.app.currentLang].mSubmit; closeModal("addModal"); }, 2000);
+}
+
 function setLang(l) {
     window.app.currentLang = l; document.querySelectorAll(".lang-btn").forEach(function(b) { b.classList.remove("active"); });
     var ab = document.getElementById("btn-" + l); if (ab) ab.classList.add("active");
@@ -270,7 +304,6 @@ function setLang(l) {
     var categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
     renderTabs(categories); renderSelectMenu(categories); renderCards();
 }
-
 function showWelcomeModal() {
     if (document.getElementById("welcomeModal")) return;
     var w = document.createElement("div"); w.id = "welcomeModal"; w.className = "modal"; w.style.display = "flex";
@@ -290,4 +323,51 @@ function changeWelcomeLang(l) {
         t.innerText = "Добро пожаловать!";
         b.innerHTML = "Прошу прощения, если чья-то фамилия или номер записаны неверно. Если вы нашли ошибку, нажмите на кнопку с треугольником (⚠️) на нужной карточке, чтобы прислать верные сведения.<br><br>💡 <b>Подсказка по поиску:</b> Введите любое имя или услугу. Поиск проверит все разделы разом! Если не можете найти человека по короткому имени (Паша, Женя), попробуйте ввести полное (Павел, Евгений).";
     } else {
-        
+        t.innerText = "Қош келдіңіздер!";
+        b.innerHTML = "Егер біреудің тегі немесе нөмірі қате жазылса, кешірім өтінемін. Қате тапсаңыз, дұрыс мәліметті жіберу үшін тиісті карточкадағы үшбұрыш (⚠️) батырмасын басыңыз.<br><br>💡 <b>Іздеу бойынша кеңес:</b> Кез келген есімді немесе қызметті енгізіңіз. Іздеу барлық бөлімдерді бірден тексереді! Егер адамды қысқа атымен (Паша, Женя) таба алмасаңыз, толық атын (Павел, Евгений) енгізіп көріңіз.";
+    }
+    const wm = document.getElementById("welcomeModal"); if (wm) { wm.querySelectorAll(".lang-btn").forEach(function(x) { x.classList.remove("active"); if (x.innerText.toLowerCase() === l) x.classList.add("active"); }); }
+}
+
+function resetSearch() {
+    const sIn = document.getElementById("searchInput"); if (sIn) sIn.value = "";
+    const bRes = document.getElementById("btnReset"); if (bRes) bRes.style.display = "none";
+    const tRow = document.querySelector(".categories-control-row"); if (tRow) tRow.style.display = "flex";
+    const fTag = document.querySelector(".card-tag");
+    if (fTag) {
+        const curL = fTag.innerText;
+        for (let key in categoryTranslations) { if (categoryTranslations[key][window.app.currentLang] === curL || key === curL) { window.app.activeCategory = key; break; } }
+    }
+    renderCards();
+    setTimeout(function() { const aTab = document.querySelector(".tab.active"); if (aTab) aTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, 50);
+}
+
+function renderAlphabet(uniqueLetters) {
+    const container = document.getElementById("alphabetContainer"); if (!container) return; container.innerHTML = "";
+    if (window.app.activeCategory !== "ЖИТЕЛИ" || document.getElementById("searchInput").value.length > 0) { container.style.display = "none"; return; }
+    container.style.display = "flex";
+    uniqueLetters.forEach(function(letter) {
+        const btn = document.createElement("button"); btn.className = "letter-btn " + (letter === window.app.activeLetter ? "active" : ""); btn.innerText = letter;
+        btn.onclick = function() { window.app.activeLetter = (window.app.activeLetter === letter) ? "" : letter; renderCards(); }; container.appendChild(btn);
+    });
+}
+
+function toggleCategoriesView() {
+    const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return;
+    if (window.app.currentViewMode === "tabs") { window.app.currentViewMode = "select"; tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; }
+    else { window.app.currentViewMode = "tabs"; tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; }
+    localStorage.setItem("dar_view_mode", window.app.currentViewMode);
+}
+function restoreViewMode() {
+    const saved = localStorage.getItem("dar_view_mode"); if (saved) { window.app.currentViewMode = saved; }
+    const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return;
+    if (window.app.currentViewMode === "select") { tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; }
+    else { tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; }
+}
+function handleSelectCategoryChange() { const mainSel = document.getElementById("categoriesMainSelect"); if (mainSel) { window.app.activeCategory = mainSel.value; window.app.activeLetter = ""; renderCards(); } }
+
+window.onscroll = function() { var btnTop = document.getElementById("btnTop"); if (btnTop) btnTop.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none"; };
+function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+window.addEventListener("scroll", function() { var sInput = document.getElementById("searchInput"); if (sInput && document.activeElement === sInput) sInput.blur(); });
+function initTracking() { var img = document.createElement("img"); img.src = "https://yadro.ru" + escape(document.URL) + ";" + Math.random(); img.style.display = "none"; document.body.appendChild(img); }
+function toggleTheme() { document.body.classList.toggle("dark-mode"); }
