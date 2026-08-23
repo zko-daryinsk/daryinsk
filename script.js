@@ -89,7 +89,8 @@ function loadVillages() {
                 if (!trimmed || trimmed.startsWith("#")) return;
                 const cells = trimmed.split("|").map(function(c) { return c.trim(); });
                 if (cells.length >= 3) {
-                    window.app.villages.push({ id: cells, ru: cells, kz: cells });
+    window.app.villages.push({ id: cells[0], ru: cells[1], kz: cells[2] });
+}
                 }
             });
             window.app.activeVillage = "darinsk";
