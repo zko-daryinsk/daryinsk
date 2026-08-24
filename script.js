@@ -365,3 +365,46 @@ function renderSelectMenu(categories) { var select = document.getElementById("ca
 window.onscroll = function() { var btnTop = document.getElementById("btnTop"); if (btnTop) btnTop.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none"; };
 function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
 function toggleTheme() { document.body.classList.toggle("dark-mode"); }
+function switchToFavoritesCategory() {
+    window.app.activeCategory = "FAVORITES";
+    window.app.activeLetter = "";
+    document.querySelectorAll(".tab").forEach(function(t) { 
+        t.classList.remove("active"); 
+    });
+    const fTab = document.getElementById("btnFavAction");
+    if (fTab) { fTab.style.transform = "scale(0.98)"; setTimeout(function() { fTab.style.transform = "none"; }, 100); }
+    renderCards();
+}
+
+function buildFormCategorySelect(cats) {
+    var s = document.getElementById("formCatSelect"); 
+    if (!s) return; s.innerHTML = "";
+    cats.forEach(function(c) {
+        if (c === "FAVORITES") return;
+        var o = document.createElement("option"); o.value = c;
+        o.innerText = (categoryTranslations[c] && categoryTranslations[c][window.app.currentLang]) ? categoryTranslations[c][window.app.currentLang] : c;
+        s.appendChild(o);
+    });
+    var co = document.createElement("option"); co.value = "CUSTOM_OPTION";
+    co.innerText = dict[window.app.currentLang].mCustomOpt;
+    s.appendChild(co);
+    toggleCustomCategoryField();
+}
+function injectExtendedCategoryIcons() {
+    const ext = {
+        "БЛАГОУСТРОЙСТВО": { "ru": "🌳 БЛАГОУСТРОЙСТВО", "kz": "🌳 АБАТТАНДЫРУ" },
+        "ВЫПЕЧКА": { "ru": "🥐 ВЫПЕЧКА / ТОРТЫ", "kz": "🥐 НАН ӨНІМДЕРІ" },
+        "КАФЕ": { "ru": "☕ КАФЕ / ТОЙХАНА", "kz": "☕ КАФЕ / ТОЙХАНА" },
+        "КОВРЫ": { "ru": "🧹 СТИРКА КОВРОВ", "kz": "🧹 КІЛЕМ ЖУУ" },
+        "КОРМА": { "ru": "🌾 КОРМА / ЗЕРНО", "kz": "🌾 ЖЕМ-ШӨП" },
+        "СКВАЖИНЫ": { "ru": "🚰 СКВАЖИНЫ / ВОДА", "kz": "🚰 ҚҰДЫҚ БҰРҒЫЛАУ" },
+        "ШКОЛЫ": { "ru": "🏫 ШКОЛЫ / ЛИЦЕИ", "kz": "🏫 МЕКТЕПТЕР" }
+    };
+    for (let key in ext) {
+        if (!categoryTranslations[key]) { categoryTranslations[key] = ext[key]; }
+    }
+}
+// ЗАПУСКАЕМ ИНЖЕКТОР СМАЙЛИКОВ ПРИ ИНИЦИАЛИЗАЦИИ
+document.addEventListener("DOMContentLoaded", function() {
+    injectExtendedCategoryIcons();
+});
