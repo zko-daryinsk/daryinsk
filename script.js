@@ -317,7 +317,7 @@ function setLang(l) {
     document.getElementById("btnCancelForm").innerText = l === "ru" ? "Отмена" : "Бас тарту";
     document.getElementById("btnViewToggle").innerText = (window.app.currentViewMode === "tabs") ? dict[l].viewTabs : dict[l].viewSelect;
     var categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
-    renderTabs(categories); renderSelectMenu(categories); renderCards();
+        renderTabs(categories); renderSelectMenu(categories); renderCards();
         buildFormCategorySelect(categories);
     
 }
