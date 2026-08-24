@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Справочник посёлков</title>
-    <link rel="stylesheet" href="style.css?v=internet_release_3.2">
+    <link rel="stylesheet" href="style.css?v=ultimate_final_win_2026">
 </head>
 <body>
 
@@ -14,12 +14,11 @@
             <div class="title-site" id="siteTitle">Справочник</div>
             <div class="lang-panel">
                 <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
-                <span class="lang-btn" id="btn-kz" onclick="setLang('kz')">KZ</span>
+                <span class="lang-btn" id="id-kz" onclick="setLang('kz')">KZ</span>
             </div>
         </div>
 
-        <!-- КНОПКИ ВЫБОРА ПОСЁЛКОВ -->
-        <div id="villageSelectorContainer" style="display: flex; gap: 6px; overflow-x: auto; padding: 2px 12px 10px 12px; border-bottom: 1px dashed rgba(0,0,0,0.1); margin-bottom: 8px;"></div>
+        <div id="villageSelectorContainer"></div>
         
         <div class="search-row">
             <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Поиск...">
@@ -38,15 +37,20 @@
         </div>
     </header>
 
+    <div id="searchTitleContainer" style="display:none; padding:10px 12px 2px 12px; font-weight:700; color:#4a5568; font-size:14px;"></div>
     <div id="alphabetContainer" style="display:none; padding:10px 12px 2px 12px; gap:5px; flex-wrap:wrap; justify-content:center;"></div>
     <main id="content"></main>
 
     <button id="btnTop" onclick="scrollToTop()">▲</button>
-
-    <div class="modal" id="addModal" onclick="closeModal('addModal', event)">
+        <div class="modal" id="addModal" onclick="closeModal('addModal', event)">
         <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 id="modalTitle" style="margin-bottom:5px;">Новая анкетная форма</h3>
+            <h3 id="modalTitle" style="margin-bottom:8px;">Новая анкетная форма</h3>
             
+            <!-- 🚏 НОВОЕ ПОЛЕ: ВЫБОР ПОСЁЛКА ДЛЯ ВАШЕГО УДОБСТВА В WHATSAPP -->
+            <div class="form-group">
+                <select id="formVillageSelect" style="border: 2px solid #0b66ff; font-weight:700; color:#0b66ff;"></select>
+            </div>
+
             <div class="form-group">
                 <select id="formCatSelect" onchange="toggleCustomCategoryField()"></select>
             </div>
@@ -71,13 +75,10 @@
             </div>
         </div>
     </div>
-    
-    <!-- ЕДИНСТВЕННЫЙ УЛЬТИМАТИВНЫЙ МОНОЛИТНЫЙ ИНТЕРНЕТ-СКРИПТ ВСЕГО ПРОЕКТА -->
-    <script src="script.js?v=absolute_internet_win_2026_win"></script>
-    
+
+    <script src="script.js?v=ultimate_final_win_2026"></script>
     <script>
         document.addEventListener("DOMContentLoaded", function() {
-            console.log("=== Интернет-движок запущен. Включаю зажигание ===");
             if (typeof initApp === "function") { initApp(); }
         });
     </script>
