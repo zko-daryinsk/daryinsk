@@ -10,7 +10,7 @@
 body {
     background-color: #f4f6f9;
     color: #1a202c;
-    padding-top: 245px; /* ИДЕАЛЬНЫЙ ОТСТУП: Карточки больше не заезжают под меню посёлков */
+    padding-top: 245px; /* КРЕПКИЙ ОТСТУП ПОД ШАПКУ ПОСЁЛКОВ */
     transition: background-color 0.3s, color 0.3s;
 }
 
@@ -19,7 +19,7 @@ body.dark-mode {
     color: #e2e8f0;
 }
 
-/* ФИКСИРОВАННАЯ КРЕПКАЯ ШАПКА САЙТА */
+/* ФИКСИРОВАННАЯ ШАПКА САЙТА */
 header {
     position: fixed;
     top: 0;
@@ -54,7 +54,7 @@ body.dark-mode .title-site {
     color: #478eff;
 }
 
-/* СТИЛЬНЫЙ СЛАЙДЕР ВЫБОРА ПОСЁЛКОВ ИЗ VILLAGES.TXT */
+/* СЛАЙДЕР ВЫБОРА ПОСЁЛКОВ ИЗ VILLAGES.TXT */
 #villageSelectorContainer {
     display: flex;
     gap: 6px;
@@ -65,7 +65,7 @@ body.dark-mode .title-site {
 }
 
 #villageSelectorContainer::-webkit-scrollbar {
-    display: none; /* Прячем полосу прокрутки */
+    display: none;
 }
 
 /* ПОИСКОВАЯ СТРОКА */
@@ -102,7 +102,7 @@ body.dark-mode #searchInput {
     display: none;
 }
 
-/* ГЛАВНЫЕ КНОПКИ ДЕЙСТВИЙ */
+/* ГЛАВНЫЕ КНОПКИ ДЕЙСТВИЙ (ИЗБРАННОЕ И ДОБАВИТЬ) */
 .btn-action-main {
     background: #0b66ff;
     color: white;
@@ -114,7 +114,6 @@ body.dark-mode #searchInput {
     cursor: pointer;
     text-align: center;
 }
-
 /* СЕРВИСНАЯ ПАНЕЛЬ С КАТЕГОРИЯМИ И ВКЛАДКАМИ */
 .categories-control-row {
     display: flex;
@@ -144,7 +143,7 @@ body.dark-mode .view-toggle-btn {
     overflow-x: auto;
     flex: 1;
     -webkit-overflow-scrolling: touch;
-    scroll-behavior: smooth; /* ПЛАВНОЕ ДВИЖЕНИЕ ШАПКИ ЗА СВАЙПОМ КАРТОЧЕК */
+    scroll-behavior: smooth;
 }
 
 .tabs::-webkit-scrollbar { display: none; }
@@ -202,7 +201,7 @@ body.dark-mode .letter-btn {
     border-color: #0b66ff;
 }
 
-/* СТИЛИ КАРТОЧЕК КОНТАКТОВ */
+/* ПЛОТНЫЕ ПОДЖАТЫЕ КАРТОЧКИ КОНТАКТОВ */
 main {
     padding: 8px 12px;
 }
@@ -211,7 +210,7 @@ main {
     background: white;
     border-radius: 12px;
     padding: 12px;
-    margin-bottom: 10px;
+    margin-bottom: 6px; /* КАРТОЧКИ АККУРАТНО ПРИПОДНЯТЫ ВВЕРХ */
     box-shadow: 0 2px 6px rgba(0,0,0,0.03);
     border: 1px solid #edf2f7;
 }
@@ -283,7 +282,7 @@ body.dark-mode .card-phone-line { color: white; }
 .btn-ui-wa { background: #25d366; color: white; }
 
 /* ТРИ МИНИ-КНОПКИ В ОДИН РЯД В САМОМ НИЗУ КАРТОЧКИ */
-.card-actions-row-three button {
+.card-actions-row-three button, .btn-ui-mini {
     padding: 7px 4px !important;
     font-size: 11px !important;
     font-weight: 700 !important;
@@ -293,7 +292,7 @@ body.dark-mode .card-phone-line { color: white; }
     cursor: pointer !important;
 }
 
-/* МОДАЛЬНЫЕ ОКНА И ПРИВЕТСТВИЕ */
+/* МОДАЛЬНЫЕ ОКНА И АНКЕТА */
 .modal {
     position: fixed;
     top: 0; left: 0; right: 0; bottom: 0;
