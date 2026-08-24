@@ -318,6 +318,8 @@ function setLang(l) {
     document.getElementById("btnViewToggle").innerText = (window.app.currentViewMode === "tabs") ? dict[l].viewTabs : dict[l].viewSelect;
     var categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
     renderTabs(categories); renderSelectMenu(categories); renderCards();
+        buildFormCategorySelect(categories);
+    
 }
 
 function showWelcomeModal() {
@@ -408,3 +410,21 @@ function injectExtendedCategoryIcons() {
 document.addEventListener("DOMContentLoaded", function() {
     injectExtendedCategoryIcons();
 });
+let touchStartX = 0, touchStartY = 0;
+window.addEventListener("touchstart", function(e) { touchStartX = e.changedTouches.screenX; touchStartY = e.changedTouches.screenY; }, { passive: true });
+window.addEventListener("touchend", function(e) {
+    const sIn = document.getElementById("searchInput");
+    if (window.app.currentViewMode !== "tabs" || (sIn && sIn.value.length > 0)) return;
+    if (document.getElementById("welcomeModal") || (document.getElementById("addModal") && document.getElementById("addModal").style.display === "flex")) return;
+    const diffX = touchStartX - e.changedTouches.screenX; const diffY = touchStartY - e.changedTouches.screenY;
+    if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45) {
+        const categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
+        let idx = categories.indexOf(window.app.activeCategory);
+        if (categories.length > 0) {
+            if (diffX > 0) { idx = (idx < categories.length - 1) ? idx + 1 : 0; }
+            else if (diffX < 0) { idx = (idx > 0) ? idx - 1 : categories.length - 1; }
+            window.app.activeCategory = categories[idx]; window.app.activeLetter = ""; setLang(window.app.currentLang); window.scrollTo({ top: 0, behavior: "instant" });
+            setTimeout(function() { const activeTab = document.querySelector(".tab.active"); if (activeTab) activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, 50);
+        }
+    }
+}, { passive: true });
