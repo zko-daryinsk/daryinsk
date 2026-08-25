@@ -19,7 +19,6 @@ const nameSynonyms = {
   "баха": "бахтияр", "маха": "махамбет"
 };
 
-// Задача №4: Все категории дополнены сочными эмодзи, для ковров установлен орнамент
 const categoryTranslations = {
   "АВАРИЙНАЯ": { "ru": "🚨 АВАРИЙНАЯ", "kz": "🚨 АПАТТЫҚ" },
   "ПОЛИЦИЯ": { "ru": "👮 ПОЛИЦИЯ", "kz": "👮 ПОЛИЦИЯ" },
@@ -51,8 +50,7 @@ const categoryTranslations = {
   "ФАСТФУД": { "ru": "🍔 ФАСТФУД", "kz": "🍔 ФАСТФУД" },
   "ОКНА": { "ru": "🪟 ОКНА/ПОТОЛКИ", "kz": "🪟 ТЕРЕЗЕЛЕР" },
   "ПТИЦЫ": { "ru": "🐥 ПТИЦЕВОДСТВО", "kz": "🐥 ҚҰСТАР" },
-  "FAVORITES": { "ru": "⭐ Избранное", "kz": "⭐ Таңдаулылар" },
-  /* Новые внедренные категории из Задача №4 */
+  "FAVORITES": { "ru": "Избранное", "kz": "Таңдаулылар" },
   "БЛАГОУСТРОЙСТВО": { "ru": "🌳 БЛАГОУСТРОЙСТВО", "kz": "🌳 АБАТТАНДЫРУ" },
   "ВЫПЕЧКА": { "ru": "🥐 ВЫПЕЧКА", "kz": "🥐 ПІСІРІЛГЕН ТАҒАМДАР" },
   "КАФЕ": { "ru": "☕ КАФЕ", "kz": "☕ КАФЕ" },
@@ -64,24 +62,24 @@ const categoryTranslations = {
   "ШКОЛЫ": { "ru": "🏫 ШКОЛЫ", "kz": "🏫 МЕКТЕПТЕР" }
 };
 
+// ИСПРАВЛЕНО: Значки ⭐ и + удалены из самих строк, чтобы скрипт не двоил их в шапке
 const dict = {
   ru: {
     title: "Справочник посёлков", search: "Поиск...", reset: "Сбросить",
-    mainBtn: "+ Добавить", favBtn: "⭐ Избранное", viewTabs: "👁️ Вкладки", viewSelect: "👁️ Список",
+    mainBtn: "Добавить", favBtn: "Избранное", viewTabs: "👁️ Вкладки", viewSelect: "👁️ Список",
     noResults: "Ничего не найдено", callMob: "Позвонить", callGov: "Позвонить на городской",
     numCopied: "Номер скопирован в буфер обмена!", shareCopied: "Ссылка скопирована! Отправьте её друзьям.",
     confirmErr: "Хотите сообщить администратору об ошибке в этом контакте?",
     mTitle: "Новая анкетная форма", mCustomOpt: "Вписать категорию руками...",
     lblHasWA: "На этом номере есть WhatsApp", mSubmit: "Отправить в WhatsApp",
     mAlert: "Заполните Посёлок, Категорию, Название и Телефон!",
-    /* Тексты для объединенного инфо-окна */
     infoWelcome: "Добро пожаловать!", infoHowTo: "Как пользоваться справочником?",
     infoOpenBtn: "Открыть справочник", infoCloseBtn: "Понятно",
-    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 Шаг 1. Быстрый поиск и категории</div><div class='info-step-text'>Выбирайте свой посёлок вверху экрана для точной фильтрации. Чтобы найти услугу, используйте любой удобный способ: перелистывайте горизонтальные <b>Вкладки</b>, открывайте выпадающий <b>Список</b> категорий или просто пишите название (например, 'Пожарная' или 'Ремонт') в строке <b>Поиск</b>. Если не можете найти человека по короткому имени (Паша), введите полное (Павел).</div></div><div class='info-step-block'><div class='info-step-title'>⭐ Шаг 2. Избранное и Безопасность</div><div class='info-step-text'>Нажмите звёздочку на карточке, чтобы добавить контакт в <b>Избранное</b> — они всегда будут под рукой. При нажатии на синюю кнопку 'Позвонить' сайт попросит подтверждение, чтобы защитить вас от случайных вызовов.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ Шаг 3. Добавление и Ошибки</div><div class='info-step-text'>Проект бесплатный и общественный. Если вы знаете полезный контакт или хотите добавить себя — нажмите <b>+ Добавить</b>. Если нашли неточность, нажмите на карточке кнопку <b>⚠️ Ошибка</b>, чтобы отправить верные данные Администратору.</div></div>"
+    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 Шаг 1. Быстрый поиск и категории</div><div class='info-step-text'>Выбирайте свой посёлок вверху экрана для точной фильтрации. Чтобы найти услугу, используйте любой удобный способ: перелистывайте горизонтальные <b>Вкладки</b>, открывайте выпадающий <b>Список</b> категорий или просто пишите название в строке <b>Поиск</b>. Если не можете найти человека по короткому имени (Паша), введите полное (Павел).</div></div><div class='info-step-block'><div class='info-step-title'>⭐ Шаг 2. Избранное и Безопасность</div><div class='info-step-text'>Нажмите звёздочку на карточке, чтобы добавить контакт в Избранное — они всегда будут под рукой. При нажатии на синюю кнопку 'Позвонить' сайт попросит подтверждение, чтобы защитить вас от случайных вызовов.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ Шаг 3. Добавление и Ошибки</div><div class='info-step-text'>Проект бесплатный и общественный. Если вы знаете полезный контакт или хотите добавить себя — нажмите <b>Добавить</b>. Если нашли неточность, нажмите на карточке кнопку <b>⚠️ Ошибка</b>, чтобы отправить верные данные Администратору.</div></div>"
   },
   kz: {
     title: "Ауыл анықтамалығы", search: "Іздеу...", reset: "Тазалау",
-    mainBtn: "➕ Қосу", favBtn: "⭐ Таңдаулылар", viewTabs: "👁️ Вкладкалар", viewSelect: "👁️ Тізім",
+    mainBtn: "Қосу", favBtn: "Таңдаулылар", viewTabs: "👁️ Вкладкалар", viewSelect: "👁️ Тізім",
     noResults: "Ештеңе табылмады", callMob: "Қоңырау шалу", callGov: "Қалалық нөмірге қоңырау",
     numCopied: "Нөмір буферге көшірілді!", shareCopied: "Сілтеме көшірілді! Достарыңызға жіберіңіз.",
     confirmErr: "Бұл контактідегі қате туралы әкімшіге хабарлағыңыз келе ме?",
@@ -90,10 +88,9 @@ const dict = {
     mAlert: "Санатты, Атауды және Телефонды толтырыңыз!",
     infoWelcome: "Қош келдіңіздер!", infoHowTo: "Анықтамалықты қалай пайдалану керек?",
     infoOpenBtn: "Анықтамалықты ашу", infoCloseBtn: "Жақсы",
-    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданыңыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>+ Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жіберу үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
+    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданыңыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жіберу үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
   }
 };
-
 function normalizeString(str) {
   if (!str) return "";
   return str.toString().toLowerCase()
@@ -106,6 +103,7 @@ function initApp() {
   restoreViewMode();
   loadVillages();
 }
+
 function loadVillages() {
   fetch("villages.txt?v=" + new Date().getTime())
     .then(function(res) { if (!res.ok) throw new Error(); return res.text(); })
@@ -125,7 +123,7 @@ function loadVillages() {
       loadBazaByVillage(window.app.activeVillage);
     })
     .catch(function() {
-      window.app.villages = [{ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское ауылы" }];
+      window.app.villages = [{ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское audiы" }];
       window.app.activeVillage = "darinsk";
       renderVillageSelector();
       buildFormVillageSelect();
@@ -166,7 +164,6 @@ function renderVillageSelector() {
   });
 }
 
-// Задача №3: Интегрирован эталонный фильтр отсечения пустых строк и бракованных контактов
 function loadBazaByVillage(villageId) {
   const fileName = "baza_" + villageId + ".txt";
   fetch(fileName + "?v=" + new Date().getTime())
@@ -177,7 +174,6 @@ function loadBazaByVillage(villageId) {
       
       data.split("\n").forEach(function(line) {
         const lineClean = line.trim();
-        // Безопасный пропуск пустой строки, технического комментария или брака структуры
         if (!lineClean || lineClean.startsWith("#") || !lineClean.includes("|")) {
           return;
         }
@@ -207,8 +203,6 @@ function loadBazaByVillage(villageId) {
       }
       
       setLang(window.app.currentLang);
-      
-      // Умный счетчик на 20 посещений и управление приветственным окном
       handleWelcomeCounter();
     })
     .catch(function() {
@@ -217,7 +211,7 @@ function loadBazaByVillage(villageId) {
       if (content) content.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>" + dict[window.app.currentLang].noResults + "</div>";
       setLang(window.app.currentLang);
     });
-          }
+}
 function clearDot(str) { if (!str || str.trim() === ".") return ""; return str.trim(); }
 
 function getClean10Digits(rawPhone) {
@@ -313,54 +307,52 @@ function renderCards() {
   const grouped = [];
   filtered.forEach(function(item) {
     const existing = grouped.find(function(g) {
-      return g.category === item.category && g.title.toLowerCase() === item.title.toLowerCase() && g.fio.toLowerCase() === item.fio.toLowerCase();
+      return g.category === item.category && g.title.trim().toLowerCase() === item.title.trim().toLowerCase();
     });
     if (existing) {
-      if (item.phone) existing.phones.push({ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio });
+      existing.phones.push({ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio });
     } else {
       grouped.push({
-        category: item.category, title: item.title, fio: item.fio, desc: item.desc, landmark: item.landmark,
-        phones: item.phone ? [{ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio }] : []
+        category: item.category, title: item.title, landmark: item.landmark,
+        phones: [{ num: item.phone, wa: item.waStatus, desc: item.desc, fio: item.fio }]
       });
     }
   });
 
   grouped.forEach(function(item) {
-    if (!item.phones || item.phones.length === 0) return;
     const card = document.createElement("div"); card.className = "card";
     const tag = (categoryTranslations[item.category] && categoryTranslations[item.category][window.app.currentLang]) ? categoryTranslations[item.category][window.app.currentLang] : item.category;
-    const p10 = getClean10Digits(item.phones[0].num);
+    const firstP10 = getClean10Digits(item.phones[0].num);
     
-    let html = "<div class='card-header-row'><span class='card-tag'>" + tag + "</span><button class='card-fav-btn " + (favorites.includes(p10) ? "active" : "") + "' onclick=\"toggleFavorite('" + p10 + "')\">★</button></div><div class='card-title'>" + item.title + "</div>";
-    if (clearDot(item.fio) && item.phones.length === 1) html += "<div class='card-fio'>" + clearDot(item.fio) + "</div>";
-    if (item.phones.length === 1 && clearDot(item.phones[0].desc)) html += "<div class='card-desc'>" + clearDot(item.phones[0].desc) + "</div>";
+    let html = "<div class='card-header-row'><span class='card-tag'>" + tag + "</span><button class='card-fav-btn " + (favorites.includes(firstP10) ? "active" : "") + "' onclick=\"toggleFavorite('" + firstP10 + "')\">★</button></div><div class='card-title'>" + item.title + "</div>";
     if (clearDot(item.landmark)) html += "<div class='card-landmark'>📍 " + clearDot(item.landmark) + "</div>";
 
     item.phones.forEach(function(pObj) {
       const pureDigits = getClean10Digits(pObj.num);
       html += "<div style='margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,0,0,0.06);'>";
-      const isLand = pureDigits.startsWith("71131");
-      const isShort = pureDigits.length === 3;
+      
+      // ИСПРАВЛЕНО: Теперь Имя и Описание честно выводятся для каждого телефона внутри общей карточки!
+      if (clearDot(pObj.fio)) html += "<div class='card-fio'>" + clearDot(pObj.fio) + "</div>";
+      if (clearDot(pObj.desc)) html += "<div class='card-desc'>📝 " + clearDot(pObj.desc) + "</div>";
       
       html += "<div class='card-phone-line' onclick=\"copyNumberOnly('" + pureDigits + "')\"><b>" + formatPhoneNumber(pureDigits) + "</b></div>";
-      if (item.phones.length > 1 && clearDot(pObj.desc)) html += "<div class='card-desc' style='font-size:13px; font-style:italic;'>📝 " + clearDot(pObj.desc) + "</div>";
       
+      const isLand = pureDigits.startsWith("71131");
+      const isShort = pureDigits.length === 3;
       html += "<div class='card-actions'>";
       
-      // Задача №2: Внедрение защитного confirm диалога строго для синих кнопок вызова
       if (isShort) {
         html += "<a href='tel:" + pureDigits + "' class='btn-ui btn-ui-call' style='flex:none; width:100%;' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Позвонить на городской номер " + formatPhoneNumber(pureDigits) + "?' : 'Қалалық нөмірге қоңырау шалу " + formatPhoneNumber(pureDigits) + "?')\">" + dict[window.app.currentLang].callGov + "</a>";
       } else if (isLand || pObj.wa === "NO_WA") {
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' style='flex:none; width:100%;' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + (isLand ? dict[window.app.currentLang].callGov : dict[window.app.currentLang].callMob) + "</a>";
       } else {
         const curUrl = window.location.origin + window.location.pathname;
-        let msg = "Здравствуйте! Нашел ваш контакт в Справочнике поселков (" + curUrl + "). ";
+        let msg = "Здравствуйте! Нашел ваш contact в Справочнике поселков (" + curUrl + "). ";
         if (window.app.currentLang === "kz") msg = "Саламатсыз ба! Контактіңізді ауыл анықтамалығынан (" + curUrl + ") таптым. ";
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
         html += "<a href='https://whatsapp.com" + pureDigits + "&text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
       }
-      
       html += "</div></div>";
     });
 
@@ -368,17 +360,17 @@ function renderCards() {
     const allNums = item.phones.map(function(p) { return formatPhoneNumber(getClean10Digits(p.num)); }).join(", ");
     const sTxt = clearDot(item.title) + ". Тел: " + allNums + ". Справочник: " + curUrl;
     
-    html += "<div class='card-actions-row-three' style='display:flex; gap:6px; margin-top:14px; border-top:1px dashed #ccc; padding-top:10px;'>";
+    html += "<div class='card-actions-row-three'>";
     html += "<button class='btn-ui-mini' style='background:#6c757d; flex:1;' onclick=\"copyToClipboard('" + sTxt.replace(/'/g, "\\'") + "')\">Поделиться</button>";
-    html += "<button class='btn-ui-mini' style='background:#2563eb; flex:1;' onclick=\"downloadVCard('" + item.category + "','" + item.title.replace(/'/g, "\\'") + "','" + getClean10Digits(item.phones[0].num) + "','" + item.fio.replace(/'/g, "\\'") + "')\">Сохранить</button>";
+    html += "<button class='btn-ui-mini' style='background:#2563eb; flex:1;' onclick=\"downloadVCard('" + item.category + "','" + item.title.replace(/'/g, "\\'") + "','" + getClean10Digits(item.phones[0].num) + "','" + item.phones[0].fio.replace(/'/g, "\\'") + "')\">Сохранить</button>";
     html += "<button class='btn-ui-mini' style='background:#dc2626; flex:1;' onclick=\"reporterWithErrorConfirm('" + item.category + "','" + item.title.replace(/'/g, "\\'") + "','" + allNums + "')\">⚠️ Ошибка</button>";
     html += "</div>";
 
     card.innerHTML = html;
     container.appendChild(card);
   });
-                                 }
-        let touchStartX = 0, touchStartY = 0;
+}
+  let touchStartX = 0, touchStartY = 0;
 window.addEventListener("touchstart", function(e) {
   touchStartX = e.changedTouches.clientX;
   touchStartY = e.changedTouches.clientY;
@@ -439,6 +431,7 @@ function copyToClipboard(txt) {
   }
   navigator.clipboard.writeText(txt).then(function() { alert(dict[window.app.currentLang].shareCopied); });
 }
+
 function toggleFavorite(p10) {
   let favorites = JSON.parse(localStorage.getItem("dar_fav_numbers") || "[]");
   if (favorites.includes(p10)) { favorites = favorites.filter(function(f) { return f !== p10; }); }
@@ -490,7 +483,7 @@ function resetSearch() {
   document.querySelector(".categories-control-row").style.display = "flex";
   document.getElementById("searchTitleContainer").style.display = "none";
   renderCards();
-}
+              }
 function toggleCategoriesView() {
   window.app.currentViewMode = (window.app.currentViewMode === "tabs") ? "select" : "tabs";
   localStorage.setItem("dar_view_mode", window.app.currentViewMode);
@@ -539,12 +532,14 @@ function handleWelcomeCounter() {
   count++;
   localStorage.setItem("dar_visit_count", count);
   if (count === 1 || count % 20 === 0) {
+    window.app.isWelcomeModalAuto = true;
     updateWelcomeModalContent(true);
     openModal("welcomeModal");
   }
 }
 
 function openWelcomeModalManual() {
+  window.app.isWelcomeModalAuto = false;
   updateWelcomeModalContent(false);
   openModal("welcomeModal");
 }
@@ -557,6 +552,14 @@ function updateWelcomeModalContent(isAutoVisit) {
   if (btnAction) {
     btnAction.innerText = isAutoVisit ? dict[currentLang].infoOpenBtn : dict[currentLang].infoCloseBtn;
   }
+  
+  // Обновляем визуальное состояние активной языковой кнопки внутри самой модалки
+  const mRu = document.getElementById("m-btn-ru");
+  const mKz = document.getElementById("m-id-kz");
+  if (mRu && mKz) {
+    mRu.classList.toggle("active", currentLang === "ru");
+    mKz.classList.toggle("active", currentLang === "kz");
+  }
 }
 
 function closeWelcomeModal() { closeModal("welcomeModal"); }
@@ -568,21 +571,23 @@ function setLang(lang) {
   document.getElementById("btn-ru").classList.toggle("active", lang === "ru");
   document.getElementById("id-kz").classList.toggle("active", lang === "kz");
   
-  const sIn = document.getElementById("searchInput"); 
-  if (sIn) sIn.placeholder = dict[lang].search;
+  const sIn = document.getElementById("searchInput"); if (sIn) sIn.placeholder = dict[lang].search;
+  const bRes = document.getElementById("btnReset"); if (bRes) bRes.innerText = dict[lang].reset;
   
-  const bRes = document.getElementById("btnReset"); 
-  if (bRes) bRes.innerText = dict[lang].reset;
-  
-  const bFav = document.getElementById("btnFavAction"); 
-  if (bFav) bFav.innerHTML = "⭐&nbsp;&nbsp;" + dict[lang].favBtn;
-  
-  const bAdd = document.getElementById("btnMainAction"); 
-  if (bAdd) bAdd.innerHTML = "+&nbsp;&nbsp;" + dict[lang].mainBtn;
+  // ИСПРАВЛЕНО: Чистая подстановка без жесткого принудительного склеивания значков
+  const bFav = document.getElementById("btnFavAction"); if (bFav) bFav.innerHTML = dict[lang].favBtn;
+  const bAdd = document.getElementById("btnMainAction"); if (bAdd) bAdd.innerHTML = dict[lang].mainBtn;
   
   const bVToggle = document.getElementById("btnViewToggle");
   if (bVToggle) {
     bVToggle.innerText = (window.app.currentViewMode === "tabs") ? dict[lang].viewTabs : dict[lang].viewSelect;
+  }
+  
+  // Синхронно обновляем текст открытой инструкции, если она выведена на экран
+  const wModal = document.getElementById("welcomeModal");
+  if (wModal && wModal.style.display === "flex") {
+    const isAuto = window.app.isWelcomeModalAuto !== false;
+    updateWelcomeModalContent(isAuto);
   }
   
   const rawCategories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
@@ -635,3 +640,4 @@ function setLang(lang) {
   }
   renderCards();
 }
+  
