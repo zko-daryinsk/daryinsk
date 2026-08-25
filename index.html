@@ -1,18 +1,17 @@
-<!DOCTYPE HTML>
+        <!DOCTYPE HTML>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Справочник посёлков</title>
-  <link rel="stylesheet" href="style.css?v=ultimate_final_win_2026">
+  <link rel="stylesheet" href="style.css?v=final_fix_2026">
 </head>
 <body>
 
-  <header>
+  <header id="mainSiteHeader">
     <div class="top-row">
       <button class="circle-btn" id="themeToggle" onclick="toggleTheme()">☀️</button>
       <div class="title-site" id="siteTitle">Справочник</div>
-      <!-- Кнопка Инфо (i), добавленная на позицию по маркеру -->
       <button class="circle-btn" id="btnInfo" onclick="openWelcomeModalManual()">ℹ️</button>
       <div class="lang-panel">
         <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
@@ -27,9 +26,10 @@
       <button class="btn-reset" id="btnReset" onclick="resetSearch()">Сбросить</button>
     </div>
 
+    <!-- ИСПРАВЛЕНО: Убраны дублирующиеся значки, они добавятся из скрипта -->
     <div style="display:flex; gap:8px; margin-bottom:12px;">
-      <button class="btn-action-main" id="btnFavAction" style="margin:0; flex:1;" onclick="switchToFavoritesCategory()">⭐&nbsp;&nbsp;Избранное</button>
-      <button class="btn-action-main" id="btnMainAction" style="margin:0; flex:1;" onclick="openModal('addModal')">+&nbsp;&nbsp;Добавить</button>
+      <button class="btn-action-main" id="btnFavAction" style="margin:0; flex:1;" onclick="switchToFavoritesCategory()">Избранное</button>
+      <button class="btn-action-main" id="btnMainAction" style="margin:0; flex:1;" onclick="openModal('addModal')">Добавить</button>
     </div>
 
     <div class="categories-control-row">
@@ -45,17 +45,20 @@
   <main id="content"></main>
 
   <button id="btnTop" onclick="scrollToTop()">▲</button>
-
-  <!-- ОБЪЕДИНЕННОЕ ПРИВЕТСТВЕННОЕ И ИНФОРМАЦИОННОЕ ОКНО -->
+    <!-- ОБЪЕДИНЕННОЕ ПРИВЕТСТВЕННОЕ И ИНФОРМАЦИОННОЕ ОКНО С ВЫБОРОМ ЯЗЫКА -->
   <div class="modal" id="welcomeModal" onclick="closeWelcomeModalOuter(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <button class="modal-close-x" onclick="closeWelcomeModal()">&times;</button>
-      <h3 id="welcomeModalTitle" style="margin-bottom:16px; font-size:22px; font-weight:800;">Добро пожаловать!</h3>
       
-      <!-- Контейнер для динамического текста инструкции -->
-      <div id="welcomeModalText" class="notranslate" style="margin-bottom:20px;">
-        <!-- Текст генерируется скриптом на выбранном языке (RU/KZ) -->
+      <!-- Панель переключения языков внутри приветственного окна -->
+      <div class="lang-panel" id="modal-lang-panel" style="position: absolute; top: 16px; right: 45px; z-index: 10;">
+        <span class="lang-btn active" id="m-btn-ru" onclick="setLang('ru')">RU</span>
+        <span class="lang-btn" id="m-id-kz" onclick="setLang('kz')">KZ</span>
       </div>
+
+      <h3 id="welcomeModalTitle" style="margin-bottom:16px; font-size:20px; font-weight:800; padding-right: 70px;">Добро пожаловать!</h3>
+      
+      <div id="welcomeModalText" class="notranslate" style="margin-bottom:20px;"></div>
 
       <button class="btn-action-main" id="btnWelcomeAction" style="width:100%; background:#0b66ff;" onclick="closeWelcomeModal()">Открыть справочник</button>
     </div>
@@ -118,3 +121,4 @@
   </script>
 </body>
 </html>
+
