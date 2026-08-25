@@ -62,7 +62,6 @@ const categoryTranslations = {
   "ШКОЛЫ": { "ru": "🏫 ШКОЛЫ", "kz": "🏫 МЕКТЕПТЕР" }
 };
 
-// ИСПРАВЛЕНО: Значки ⭐ и + удалены из самих строк, чтобы скрипт не двоил их в шапке
 const dict = {
   ru: {
     title: "Справочник посёлков", search: "Поиск...", reset: "Сбросить",
@@ -123,7 +122,7 @@ function loadVillages() {
       loadBazaByVillage(window.app.activeVillage);
     })
     .catch(function() {
-      window.app.villages = [{ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское audiы" }];
+      window.app.villages = [{ id: "darinsk", ru: "Посёлок Дарьинское", kz: "Дарьинское ауылы" }];
       window.app.activeVillage = "darinsk";
       renderVillageSelector();
       buildFormVillageSelect();
@@ -211,7 +210,7 @@ function loadBazaByVillage(villageId) {
       if (content) content.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>" + dict[window.app.currentLang].noResults + "</div>";
       setLang(window.app.currentLang);
     });
-}
+            }
 function clearDot(str) { if (!str || str.trim() === ".") return ""; return str.trim(); }
 
 function getClean10Digits(rawPhone) {
@@ -331,7 +330,6 @@ function renderCards() {
       const pureDigits = getClean10Digits(pObj.num);
       html += "<div style='margin-top:8px; padding-top:8px; border-top:1px dashed rgba(0,0,0,0.06);'>";
       
-      // ИСПРАВЛЕНО: Теперь Имя и Описание честно выводятся для каждого телефона внутри общей карточки!
       if (clearDot(pObj.fio)) html += "<div class='card-fio'>" + clearDot(pObj.fio) + "</div>";
       if (clearDot(pObj.desc)) html += "<div class='card-desc'>📝 " + clearDot(pObj.desc) + "</div>";
       
@@ -347,7 +345,7 @@ function renderCards() {
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' style='flex:none; width:100%;' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + (isLand ? dict[window.app.currentLang].callGov : dict[window.app.currentLang].callMob) + "</a>";
       } else {
         const curUrl = window.location.origin + window.location.pathname;
-        let msg = "Здравствуйте! Нашел ваш contact в Справочнике поселков (" + curUrl + "). ";
+        let msg = "Здравствуйте! Нашел ваш контакт в Справочнике поселков (" + curUrl + "). ";
         if (window.app.currentLang === "kz") msg = "Саламатсыз ба! Контактіңізді ауыл анықтамалығынан (" + curUrl + ") таптым. ";
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
@@ -369,8 +367,8 @@ function renderCards() {
     card.innerHTML = html;
     container.appendChild(card);
   });
-}
-  let touchStartX = 0, touchStartY = 0;
+  }
+            let touchStartX = 0, touchStartY = 0;
 window.addEventListener("touchstart", function(e) {
   touchStartX = e.changedTouches.clientX;
   touchStartY = e.changedTouches.clientY;
@@ -483,7 +481,7 @@ function resetSearch() {
   document.querySelector(".categories-control-row").style.display = "flex";
   document.getElementById("searchTitleContainer").style.display = "none";
   renderCards();
-              }
+                                       }
 function toggleCategoriesView() {
   window.app.currentViewMode = (window.app.currentViewMode === "tabs") ? "select" : "tabs";
   localStorage.setItem("dar_view_mode", window.app.currentViewMode);
@@ -553,7 +551,6 @@ function updateWelcomeModalContent(isAutoVisit) {
     btnAction.innerText = isAutoVisit ? dict[currentLang].infoOpenBtn : dict[currentLang].infoCloseBtn;
   }
   
-  // Обновляем визуальное состояние активной языковой кнопки внутри самой модалки
   const mRu = document.getElementById("m-btn-ru");
   const mKz = document.getElementById("m-id-kz");
   if (mRu && mKz) {
@@ -574,7 +571,6 @@ function setLang(lang) {
   const sIn = document.getElementById("searchInput"); if (sIn) sIn.placeholder = dict[lang].search;
   const bRes = document.getElementById("btnReset"); if (bRes) bRes.innerText = dict[lang].reset;
   
-  // ИСПРАВЛЕНО: Чистая подстановка без жесткого принудительного склеивания значков
   const bFav = document.getElementById("btnFavAction"); if (bFav) bFav.innerHTML = dict[lang].favBtn;
   const bAdd = document.getElementById("btnMainAction"); if (bAdd) bAdd.innerHTML = dict[lang].mainBtn;
   
@@ -583,7 +579,6 @@ function setLang(lang) {
     bVToggle.innerText = (window.app.currentViewMode === "tabs") ? dict[lang].viewTabs : dict[lang].viewSelect;
   }
   
-  // Синхронно обновляем текст открытой инструкции, если она выведена на экран
   const wModal = document.getElementById("welcomeModal");
   if (wModal && wModal.style.display === "flex") {
     const isAuto = window.app.isWelcomeModalAuto !== false;
@@ -640,4 +635,3 @@ function setLang(lang) {
   }
   renderCards();
 }
-  
