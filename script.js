@@ -50,7 +50,7 @@ const categoryTranslations = {
   "ФАСТФУД": { "ru": "🍔 ФАСТФУД", "kz": "🍔 ФАСТФУД" },
   "ОКНА": { "ru": "🪟 ОКНА/ПОТОЛКИ", "kz": "🪟 ТЕРЕЗЕЛЕР" },
   "ПТИЦЫ": { "ru": "🐥 ПТИЦЕВОДСТВО", "kz": "🐥 ҚҰСТАР" },
-  "FAVORITES": { "ru": "Избранное", "kz": "Таңдаулылар" },
+  "FAVORITES": { "ru": "⭐ Избранное", "kz": "⭐ Таңдаулылар" },
   "БЛАГОУСТРОЙСТВО": { "ru": "🌳 БЛАГОУСТРОЙСТВО", "kz": "🌳 АБАТТАНДЫРУ" },
   "ВЫПЕЧКА": { "ru": "🥐 ВЫПЕЧКА", "kz": "🥐 ПІСІРІЛГЕН ТАҒАМДАР" },
   "КАФЕ": { "ru": "☕ КАФЕ", "kz": "☕ КАФЕ" },
@@ -65,7 +65,7 @@ const categoryTranslations = {
 const dict = {
   ru: {
     title: "Справочник посёлков", search: "Поиск...", reset: "Сбросить",
-    mainBtn: "Добавить", favBtn: "Избранное", viewTabs: "👁️ Вкладки", viewSelect: "👁️ Список",
+    mainBtn: "+&nbsp;&nbsp;Добавить", favBtn: "⭐&nbsp;&nbsp;Избранное", viewTabs: "👁️ Вкладки", viewSelect: "👁️ Список",
     noResults: "Ничего не найдено", callMob: "Позвонить", callGov: "Позвонить на городской",
     numCopied: "Номер скопирован в буфер обмена!", shareCopied: "Ссылка скопирована! Отправьте её друзьям.",
     confirmErr: "Хотите сообщить администратору об ошибке в этом контакте?",
@@ -78,7 +78,7 @@ const dict = {
   },
   kz: {
     title: "Ауыл анықтамалығы", search: "Іздеу...", reset: "Тазалау",
-    mainBtn: "Қосу", favBtn: "Таңдаулылар", viewTabs: "👁️ Вкладкалар", viewSelect: "👁️ Тізім",
+    mainBtn: "+&nbsp;&nbsp;Қосу", favBtn: "⭐&nbsp;&nbsp;Таңдаулылар", viewTabs: "👁️ Вкладкалар", viewSelect: "👁️ Тізім",
     noResults: "Ештеңе табылмады", callMob: "Қоңырау шалу", callGov: "Қалалық нөмірге қоңырау",
     numCopied: "Нөмір буферге көшірілді!", shareCopied: "Сілтеме көшірілді! Достарыңызға жіберіңіз.",
     confirmErr: "Бұл контактідегі қате туралы әкімшіге хабарлағыңыз келе ме?",
@@ -87,7 +87,7 @@ const dict = {
     mAlert: "Санатты, Атауды және Телефонды толтырыңыз!",
     infoWelcome: "Қош келдіңіздер!", infoHowTo: "Анықтамалықты қалай пайдалану керек?",
     infoOpenBtn: "Анықтамалықты ашу", infoCloseBtn: "Жақсы",
-    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданыңыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жіберу үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
+    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданамыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жідеру үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
   }
 };
 function normalizeString(str) {
@@ -210,7 +210,7 @@ function loadBazaByVillage(villageId) {
       if (content) content.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>" + dict[window.app.currentLang].noResults + "</div>";
       setLang(window.app.currentLang);
     });
-            }
+        }
 function clearDot(str) { if (!str || str.trim() === ".") return ""; return str.trim(); }
 
 function getClean10Digits(rawPhone) {
@@ -349,7 +349,8 @@ function renderCards() {
         if (window.app.currentLang === "kz") msg = "Саламатсыз ба! Контактіңізді ауыл анықтамалығынан (" + curUrl + ") таптым. ";
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
-        html += "<a href='https://whatsapp.com" + pureDigits + "&text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
+        // ИСПРАВЛЕНО: Полностью возвращён ваш родной, рабочий формат ссылки wa.me без принудительной дописки 7 в начале
+        html += "<a href='https://wa.me" + pureDigits + "?text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
       }
       html += "</div></div>";
     });
@@ -367,8 +368,8 @@ function renderCards() {
     card.innerHTML = html;
     container.appendChild(card);
   });
-  }
-            let touchStartX = 0, touchStartY = 0;
+        }
+let touchStartX = 0, touchStartY = 0;
 window.addEventListener("touchstart", function(e) {
   touchStartX = e.changedTouches.clientX;
   touchStartY = e.changedTouches.clientY;
@@ -447,7 +448,7 @@ function reporterWithErrorConfirm(cat, title, phone) {
   if (confirm(dict[window.app.currentLang].confirmErr)) {
     const curUrl = window.location.origin + window.location.pathname;
     let msg = "ОШИБКА В КАРТОЧКЕ!\nКатегория: " + cat + "\nНазвание: " + title + "\nТел: " + phone + "\nСсылка: " + curUrl;
-    window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
+    window.location.href = "https://wa.me" + adminPhone + "?text=" + encodeURIComponent(msg);
   }
 }
 
@@ -466,7 +467,7 @@ function sendNewContact() {
   if (!v || !cat || !name || !phone) { alert(dict[window.app.currentLang].mAlert); return; }
 
   let msg = "НОВАЯ АНКЕТА:\nПосёлок: " + v + "\nКатегория: " + cat + "\nНазвание: " + name + "\nТелефон: " + phone + " (" + hasWA + ")\nФИО: " + fio + "\nОписание: " + desc + "\nОриентир: " + loc;
-  window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
+  window.location.href = "https://wa.me" + adminPhone + "?text=" + encodeURIComponent(msg);
   closeModal("addModal");
 }
 
@@ -481,7 +482,7 @@ function resetSearch() {
   document.querySelector(".categories-control-row").style.display = "flex";
   document.getElementById("searchTitleContainer").style.display = "none";
   renderCards();
-                                       }
+}
 function toggleCategoriesView() {
   window.app.currentViewMode = (window.app.currentViewMode === "tabs") ? "select" : "tabs";
   localStorage.setItem("dar_view_mode", window.app.currentViewMode);
@@ -635,3 +636,4 @@ function setLang(lang) {
   }
   renderCards();
 }
+  
