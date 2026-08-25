@@ -16,7 +16,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background-color: #f4f4f5;
   color: #1a1a1a;
-  padding-top: 0; /* ИСПРАВЛЕНО: Убрали жесткий отступ, так как шапка сама расталкивает экран */
+  padding-top: 0; /* Шапка в режиме sticky сама расталкивает экран */
   transition: background-color 0.3s, color 0.3s;
 }
 
@@ -28,7 +28,7 @@ body.baza-dark-mode {
 /* ФИКСИРОВАННАЯ АДАПТИВНАЯ ШАПКА САЙТА */
 header {
   position: -webkit-sticky;
-  position: sticky; /* ИСПРАВЛЕНО: Липкая шапка динамически подстраивается под высоту категорий */
+  position: sticky; /* Липкая шапка динамически подстраивается под высоту категорий */
   top: 0;
   left: 0;
   right: 0;
@@ -277,7 +277,7 @@ body.baza-dark-mode .letter-row {
 /* ПЛАТФОРМА И КАРТОЧКИ КОНТАКТОВ */
 main {
   padding: 0 12px;
-  margin-top: 10px; /* ИСПРАВЛЕНО: Мягкий отступ от липкой шапки сайта */
+  margin-top: 10px; /* Мягкий отступ от липкой шапки сайта */
 }
 
 .card {
@@ -350,8 +350,20 @@ body.baza-dark-mode .card {
   cursor: pointer;
 }
 
+/* ИСПРАВЛЕНО: Сделали номера видимыми и вернули значок сотового телефона */
 .card-phone-line {
-  color: white;
+  color: #1a1a1a;
+  font-size: 16px;
+  margin-bottom: 4px;
+  cursor: pointer;
+}
+
+body.baza-dark-mode .card-phone-line {
+  color: #ffffff;
+}
+
+.card-phone-line::before {
+  content: "📱 "; /* Автоматически подставляет значок телефона перед цифрами */
 }
 
 /* КНОПКИ СВЯЗИ И СЕРВИСА */
@@ -512,4 +524,5 @@ body.baza-dark-mode .info-step-text {
   box-shadow: 0 4px 10px rgba(11,102,255,0.4);
   z-index: 998;
   cursor: pointer;
-}
+  }
+  
