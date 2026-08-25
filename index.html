@@ -1,10 +1,11 @@
-  <!DOCTYPE HTML>
+<!DOCTYPE HTML>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>Справочник посёлков</title>
-  <link rel="stylesheet" href="style.css?v=refresh_ultimate_v6">
+  <!-- ИСПРАВЛЕНО: Изменена версия стиля на v=999 для сброса кэша -->
+  <link rel="stylesheet" href="style.css?v=999">
 </head>
 <body>
 
@@ -44,12 +45,11 @@
   <main id="content"></main>
 
   <button id="btnTop" onclick="scrollToTop()">▲</button>
-          <!-- ОБЪЕДИНЕННОЕ ПРИВЕТСТВЕННОЕ И ИНФОРМАЦИОННОЕ ОКНО С ВЫБОРОМ ЯЗЫКА ПО ЦЕНТРУ -->
+    <!-- ОБЪЕДИНЕННОЕ ПРИВЕТСТВЕННОЕ И ИНФОРМАЦИОННОЕ ОКНО С ВЫБОРОМ ЯЗЫКА ПО ЦЕНТРУ -->
   <div class="modal" id="welcomeModal" onclick="closeWelcomeModalOuter(event)">
     <div class="modal-content" onclick="event.stopPropagation()">
       <button class="modal-close-x" onclick="closeWelcomeModal()">&times;</button>
       
-      <!-- ИСПРАВЛЕНО: Языковая панель перенесена в центр, исключая наезд на крестик -->
       <div style="display:flex; justify-content:center; margin-bottom:12px; margin-top:4px;">
         <div class="lang-panel" id="modal-lang-panel">
           <span class="lang-btn active" id="m-btn-ru" onclick="setLang('ru')">RU</span>
@@ -114,7 +114,8 @@
     </div>
   </div>
 
-  <script src="script.js?v=super_final_win_2026"></script>
+  <!-- ИСПРАВЛЕНО: Установлена новая версия ?v=999 для сброса кэша скрипта -->
+  <script src="script.js?v=999"></script>
   <script>
     document.addEventListener("DOMContentLoaded", function() {
       initApp();
@@ -122,5 +123,3 @@
   </script>
 </body>
 </html>
-
-
