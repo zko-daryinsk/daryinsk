@@ -568,11 +568,22 @@ function setLang(lang) {
   document.getElementById("btn-ru").classList.toggle("active", lang === "ru");
   document.getElementById("id-kz").classList.toggle("active", lang === "kz");
   
-  const sIn = document.getElementById("searchInput"); if (sIn) sIn.placeholder = dict[lang].search;
-  const bRes = document.getElementById("btnReset"); if (bRes) bRes.innerText = dict[lang].reset;
-  const bFav = document.getElementById("btnFavAction"); if (bFav) bFav.innerHTML = "⭐&nbsp;&nbsp;" + dict[lang].favBtn;
-  const bAdd = document.getElementById("btnMainAction"); if (bAdd) bAdd.innerHTML = "+&nbsp;&nbsp;" + dict[lang].mainBtn;
-  const bVToggle = document.getElementById("btnViewToggle"); if (bVToggle) bVToggle.innerText = (window.app.currentViewMode === "tabs") ? dict[lang].viewTabs : dict[lang].viewSelect;
+  const sIn = document.getElementById("searchInput"); 
+  if (sIn) sIn.placeholder = dict[lang].search;
+  
+  const bRes = document.getElementById("btnReset"); 
+  if (bRes) bRes.innerText = dict[lang].reset;
+  
+  const bFav = document.getElementById("btnFavAction"); 
+  if (bFav) bFav.innerHTML = "⭐&nbsp;&nbsp;" + dict[lang].favBtn;
+  
+  const bAdd = document.getElementById("btnMainAction"); 
+  if (bAdd) bAdd.innerHTML = "+&nbsp;&nbsp;" + dict[lang].mainBtn;
+  
+  const bVToggle = document.getElementById("btnViewToggle");
+  if (bVToggle) {
+    bVToggle.innerText = (window.app.currentViewMode === "tabs") ? dict[lang].viewTabs : dict[lang].viewSelect;
+  }
   
   const rawCategories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
   if (!window.app.activeCategory && rawCategories.length > 0) window.app.activeCategory = rawCategories;
