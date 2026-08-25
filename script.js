@@ -350,7 +350,7 @@ function renderCards() {
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
         // ИСПРАВЛЕНО: Полностью возвращён ваш родной, рабочий формат ссылки wa.me без принудительной дописки 7 в начале
-        html += "<a href='https://wa.me" + pureDigits + "?text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
+          html += "<a href='https://wa.me" + pureDigits + "?text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
       }
       html += "</div></div>";
     });
