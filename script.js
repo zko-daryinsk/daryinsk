@@ -433,3 +433,67 @@ window.addEventListener("touchend", function(e) {
         }
     }
 }, { passive: true });
+// ======================================================================
+// БЛОК ДОЗАПРАВКИ: РЕСТАВРАЦИЯ СМАЙЛИКОВ И ОЖИВЛЕНИЕ НОВЫХ КНОПОК ШАПКИ
+// ======================================================================
+document.addEventListener("DOMContentLoaded", () => {
+    // 1. Возвращаем звёздочку ⭐ и плюсик ➕ на кнопки в шапке
+    const favBtn = document.getElementById("favTabBtn");
+    const addBtn = document.getElementById("addContactBtn");
+    if (favBtn) favBtn.innerHTML = `<span>⭐ Избранное</span>`;
+    if (addBtn) addBtn.innerHTML = `<span>➕ Добавить</span>`;
+
+    // Флаг ручного открытия для умной смены текста кнопки
+    let isManualOpen = false;
+
+    // 2. Оживляем круглую кнопку информации (i)
+    const infoBtn = document.getElementById("btnInfo");
+    const welcomeModal = document.getElementById("welcomeModal");
+    const welcomeActionBtn = document.getElementById("btnWelcomeAction");
+
+    if (infoBtn && welcomeModal) {
+        infoBtn.addEventListener("click", () => {
+            isManualOpen = true; // Открыто руками
+            if (welcomeActionBtn) welcomeActionBtn.textContent = "Понятно";
+            welcomeModal.style.display = "flex";
+        });
+    }
+
+    // 3. Исправляем закрытие приветственного окна
+    if (welcomeActionBtn && welcomeModal) {
+        welcomeActionBtn.addEventListener("click", () => {
+            welcomeModal.style.display = "none";
+        });
+    }
+
+    // 4. Оживляем и синхронизируем кнопку Тёмной/Тёплой темы
+    const themeToggleBtn = document.getElementById("themeToggle");
+    if (themeToggleBtn) {
+        themeToggleBtn.addEventListener("click", () => {
+            document.body.classList.toggle("dark-mode");
+            const isDark = document.body.classList.contains("dark-mode");
+            localStorage.setItem("dar_theme", isDark ? "dark" : "light");
+            themeToggleBtn.textContent = isDark ? "☀️" : "🌙";
+        });
+        
+        // Установка иконки темы при старте
+        const savedTheme = localStorage.getItem("dar_theme");
+        if (savedTheme === "dark") {
+            document.body.classList.add("dark-mode");
+            themeToggleBtn.textContent = "☀️";
+        } else {
+            themeToggleBtn.textContent = "🌙";
+        }
+    }
+    
+    // Переопределяем логику автоматического показа (каждый 20-й визит)
+    let visitCount = parseInt(localStorage.getItem("dar_visit_count") || "0");
+    visitCount += 1;
+    localStorage.setItem("dar_visit_count", visitCount);
+    
+    if ((visitCount === 1 || visitCount % 20 === 0) && welcomeModal) {
+        isManualOpen = false; // Авто-открытие
+        if (welcomeActionBtn) welcomeActionBtn.textContent = "Открыть справочник";
+        welcomeModal.style.display = "flex";
+    }
+});
