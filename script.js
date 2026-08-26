@@ -41,13 +41,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const cells = lineClean.split("|").map(c => c.trim());
             if (cells.length === 7) {
                 window.app.allContacts.push({
-                    category: cells,
-                    title: cells,
-                    phone: cells,
-                    name: cells === "." ? "" : cells,
-                    desc: cells === "." ? "" : cells,
-                    address: cells === "." ? "" : cells,
-                    waStatus: cells
+                    category: cells[0],
+                    title: cells[1],
+                    phone: cells[2],
+                    name: cells[3] === "." ? "" : cells[3],
+                    desc: cells[4] === "." ? "" : cells[4],
+                    address: cells[5] === "." ? "" : cells[5],
+                    waStatus: cells[6]
                 });
             }
         }
@@ -170,7 +170,6 @@ function toggleLanguage() {
         setWelcomeModalLang(window.app.currentLang);
     }
 }
-
 function toggleViewMode() {
     window.app.currentViewMode = window.app.currentViewMode === "tabs" ? "select" : "tabs";
     localStorage.setItem("dar_view_mode", window.app.currentViewMode);
@@ -251,7 +250,6 @@ function selectLetter(letter) {
     renderAlphabet();
     renderCards();
 }
-
 function handleSearchInput() {
     window.app.activeLetter = "";
     renderAlphabet();
@@ -259,7 +257,6 @@ function handleSearchInput() {
     const clearBtn = document.getElementById("clearSearch");
     if (clearBtn) clearBtn.style.display = query ? "block" : "none";
 
-    // УМНЫЙ ПОИСК ПО СКРЫТЫМ БЫТОВЫМ ТЕГАМ ИЗ JSON
     if (window.app.searchTags && window.app.searchTags[query]) {
         window.app.activeCategory = window.app.searchTags[query];
         renderTabs();
@@ -298,12 +295,12 @@ function renderCards() {
         filtered = filtered.filter(c => c.category === window.app.activeCategory);
     }
 
+    // СНАЙПЕРСКАЯ ФИЛЬТРАЦИЯ ПОСЕЛКОВ С ПОДДЕРЖКОЙ СЛОВА "ОКРУГ" (Вариант Б)
     if (window.app.activeCategory !== "FAVORITES" && window.app.activeCategory !== "🚨 АВАРИЙНАЯ" && window.app.activeCategory !== "ГОССЛУЖБЫ" && window.app.activeCategory !== "ПОЛИЦИЯ") {
         const villageKeyword = window.app.activeVillage.toLowerCase();
         filtered = filtered.filter(c => {
             const loc = c.address.toLowerCase();
-            const tit = c.title.toLowerCase();
-            return loc.includes(villageKeyword) || tit.includes(villageKeyword) || (!loc.includes("трекин") && !loc.includes("трёкино") && !loc.includes("рубеж") && !loc.includes("озёрн") && !loc.includes("володар"));
+            return loc.includes(villageKeyword) || loc.includes("округ");
         });
     }
 
@@ -324,7 +321,6 @@ function renderCards() {
         container.innerHTML = `<div class="no-results">${window.app.dict[window.app.currentLang].noResults}</div>`;
         return;
     }
-
     container.innerHTML = filtered.map(c => {
         const isFav = favs.includes(c.phone) ? "active" : "";
         const cleanNum = c.phone.replace(/\D/g, "").slice(-10);
@@ -363,7 +359,6 @@ function renderCards() {
         `;
     }).join("");
 }
-
 function makeCall(phone, title, address) {
     const d = window.app.dict[window.app.currentLang];
     const clean = phone.replace(/\D/g, "");
@@ -473,5 +468,3 @@ window.addEventListener("touchend", (e) => {
         selectCategory(categories[idx]);
     }
 }, { passive: true });
-        
-    
