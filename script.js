@@ -267,5 +267,211 @@ function handleSearchInput() {
     renderCards();
 }
 
-// Окончание следует...
+function clearSearch() {
+    const input = document.getElementById("searchInput");
+    if (input) input.value = "";
+    const clearBtn = document.getElementById("clearSearch");
+    if (clearBtn) clearBtn.style.display = "none";
+    renderCards();
+}
+
+function handleVillageChange(e) {
+    window.app.activeVillage = e.target.value;
+    clearSearch();
+}
+
+function renderCards() {
+    const container = document.getElementById("contactsContainer");
+    if (!container || !window.app.dict[window.app.currentLang]) return;
+
+    let query = document.getElementById("searchInput").value.trim().toLowerCase();
+    const favs = JSON.parse(localStorage.getItem("dar_favorites") || "[]");
+    let filtered = window.app.allContacts;
+
+    if (window.app.nameSynonyms && window.app.nameSynonyms[query]) {
+        query = window.app.nameSynonyms[query];
+    }
+
+    if (window.app.activeCategory === "FAVORITES") {
+        filtered = filtered.filter(c => favs.includes(c.phone));
+    } else {
+        filtered = filtered.filter(c => c.category === window.app.activeCategory);
+    }
+
+    if (window.app.activeCategory !== "FAVORITES" && window.app.activeCategory !== "🚨 АВАРИЙНАЯ" && window.app.activeCategory !== "ГОССЛУЖБЫ" && window.app.activeCategory !== "ПОЛИЦИЯ") {
+        const villageKeyword = window.app.activeVillage.toLowerCase();
+        filtered = filtered.filter(c => {
+            const loc = c.address.toLowerCase();
+            const tit = c.title.toLowerCase();
+            return loc.includes(villageKeyword) || tit.includes(villageKeyword) || (!loc.includes("трекин") && !loc.includes("трёкино") && !loc.includes("рубеж") && !loc.includes("озёрн") && !loc.includes("володар"));
+        });
+    }
+
+    if (window.app.activeLetter) {
+        filtered = filtered.filter(c => c.title.trim().toUpperCase().startsWith(window.app.activeLetter));
+    }
+
+    if (query) {
+        filtered = filtered.filter(c => 
+            c.title.toLowerCase().includes(query) || 
+            c.desc.toLowerCase().includes(query) || 
+            c.address.toLowerCase().includes(query) || 
+            c.phone.replace(/\D/g, "").includes(query)
+        );
+    }
+
+    if (filtered.length === 0) {
+        container.innerHTML = `<div class="no-results">${window.app.dict[window.app.currentLang].noResults}</div>`;
+        return;
+    }
+
+    container.innerHTML = filtered.map(c => {
+        const isFav = favs.includes(c.phone) ? "active" : "";
+        const cleanNum = c.phone.replace(/\D/g, "").slice(-10);
+        
+        let formattedPhone = c.phone;
+        if (cleanNum.length === 10 && !c.phone.startsWith("1")) {
+            formattedPhone = `+7 (${cleanNum.slice(0,3)}) ${cleanNum.slice(3,6)}-${cleanNum.slice(6,8)}-${cleanNum.slice(8,10)}`;
+        }
+
+        const waLink = `https://whatsapp.com{cleanNum}&text=${encodeURIComponent("Здравствуйте!")}`;
+        const hasWa = c.waStatus === "$";
+
+        return `
+            <div class="card">
+                <div class="card-header">
+                    <div>
+                        <span class="card-category-badge">${window.app.categoryTranslations[c.category]?.[window.app.currentLang] || c.category}</span>
+                        <h3 class="card-title">${c.title}</h3>
+                    </div>
+                    <button class="fav-star ${isFav}" onclick="toggleFavorite('${c.phone}', this)">★</button>
+                </div>
+                <div class="card-body">
+                    ${c.name ? `<p>👤 ${c.name}</p>` : ""}
+                    ${c.desc ? `<p>📝 ${c.desc}</p>` : ""}
+                    ${c.address ? `<p>📍 ${c.address}</p>` : ""}
+                    <p class="card-phone card-phone-line">${formattedPhone}</p>
+                </div>
+                <div class="card-actions">
+                    <button class="btn btn-call ${hasWa ? "" : "w-100"}" onclick="makeCall('${c.phone}', '${c.title}', '${c.address}')">📞 Звонок</button>
+                    ${hasWa ? `<a href="${waLink}" target="_blank" class="btn btn-wa">💬 WhatsApp</a>` : ""}
+                </div>
+                <div class="card-footer-links">
+                    <a href="https://whatsapp.com{adminPhone}&text=${encodeURIComponent("Ошибка в контакте: " + c.title)}" target="_blank" class="report-err">⚠️ ${window.app.dict[window.app.currentLang].errorReport || "Ошибка"}</a>
+                </div>
+            </div>
+        `;
+    }).join("");
+}
+
+function makeCall(phone, title, address) {
+    const d = window.app.dict[window.app.currentLang];
+    const clean = phone.replace(/\D/g, "");
+    let finalPhone = phone;
+
+    if (clean.length < 10) {
+        let detectedVillage = window.app.activeVillage;
+        const addrLower = address.toLowerCase();
+        if (addrLower.includes("рубеж")) detectedVillage = "Рубежка";
+        if (addrLower.includes("трекин") || addrLower.includes("трёкин")) detectedVillage = "Трёкино";
+        if (addrLower.includes("озёрн") || addrLower.includes("озерн")) detectedVillage = "Озёрное";
+        if (addrLower.includes("володар")) detectedVillage = "Володарка";
+
+        const areaCode = window.app.villageAreaCodes[detectedVillage] || "71131";
+        finalPhone = `+7${areaCode}${clean}`;
+    } else {
+        finalPhone = `+7${clean.slice(-10)}`;
+    }
+
+    if (confirm(`${d.callMob || "Позвонить"} ${title}?\n${finalPhone}`)) {
+        window.location.href = `tel:${finalPhone}`;
+    }
+}
+
+function toggleFavorite(phone, element) {
+    let favs = JSON.parse(localStorage.getItem("dar_favorites") || "[]");
+    if (favs.includes(phone)) {
+        favs = favs.filter(p => p !== phone);
+        element.classList.remove("active");
+    } else {
+        favs.push(phone);
+        element.classList.add("active");
+    }
+    localStorage.setItem("dar_favorites", JSON.stringify(favs));
+    if (window.app.activeCategory === "FAVORITES") renderCards();
+}
+
+function openAddModal() {
+    const modal = document.getElementById("addModal");
+    if (modal) modal.style.display = "flex";
+    buildFormCategorySelect();
+}
+
+function closeAddModal() {
+    const modal = document.getElementById("addModal");
+    if (modal) modal.style.display = "none";
+}
+
+function buildFormCategorySelect() {
+    const select = document.getElementById("formCategorySelect");
+    const categories = Object.keys(window.app.categoryTranslations || {});
+    if (!select || categories.length === 0) return;
+    select.innerHTML = categories.map(cat => {
+        const label = window.app.categoryTranslations[cat]?.[window.app.currentLang] || cat;
+        return `<option value="${cat}">${label}</option>`;
+    }).join("");
+}
+
+function handleFormSubmit(e) {
+    e.preventDefault();
+    const d = window.app.dict[window.app.currentLang];
+    const cat = document.getElementById("formCategorySelect").value;
+    const title = document.getElementById("formTitle").value.trim();
+    const phone = document.getElementById("formPhone").value.trim().replace(/\D/g, "").slice(-10);
+    const name = document.getElementById("formName").value.trim() || ".";
+    const desc = document.getElementById("formDesc").value.trim() || ".";
+    const addr = document.getElementById("formAddress").value.trim() || ".";
+    const schedule = document.getElementById("formSchedule").value.trim() || ".";
+
+    if (!title || phone.length !== 10) {
+        alert(d.mAlert || "Ошибка заполнения!");
+        return;
+    }
+
+    const vcard = `BEGIN:VCARD%0AVERSION:3.0%0AFN:${title}%0ATEL;CELL:+7${phone}%0ANOTE:${cat} | ${desc} | Время работы: ${schedule}%0AADR:${addr}%0AEND:VCARD`;
+    const text = `Новая заявка в справочник!%0A%0A${cat} | ${title} | ${phone} | ${name} | ${desc} | ${addr} | ${schedule} | $%0A%0AСкопируйте vCard ниже для сохранения:%0A${vcard}`;
+    
+    window.open(`https://whatsapp.com{adminPhone}&text=${text}`, "_blank");
+    closeAddModal();
+}
+
+let touchStartX = 0;
+let touchStartY = 0;
+
+window.addEventListener("touchstart", (e) => {
+    touchStartX = e.changedTouches.screenX;
+    touchStartY = e.changedTouches.screenY;
+}, { passive: true });
+
+window.addEventListener("touchend", (e) => {
+    if (window.app.currentViewMode !== "tabs" || window.app.activeCategory === "FAVORITES") return;
+    const addMod = document.getElementById("addModal");
+    const welMod = document.getElementById("welcomeModal");
+    if ((addMod && addMod.style.display === "flex") || (welMod && welMod.style.display === "flex")) return;
+
+    const diffX = touchStartX - e.changedTouches.screenX;
+    const diffY = touchStartY - e.changedTouches.screenY;
+    const categories = Object.keys(window.app.categoryTranslations || {});
+
+    if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45 && categories.length > 0) {
+        let idx = categories.indexOf(window.app.activeCategory);
+        if (diffX > 0) {
+            idx++; if (idx >= categories.length) idx = 0;
+        } else {
+            idx--; if (idx < 0) idx = categories.length - 1;
+        }
+        selectCategory(categories[idx]);
+    }
+}, { passive: true });
+        
     
