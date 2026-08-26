@@ -87,7 +87,7 @@ const dict = {
     mAlert: "Санатты, Атауды және Телефонды толтырыңыз!",
     infoWelcome: "Қош келдіңіздер!", infoHowTo: "Анықтамалықты қалай пайдалану керек?",
     infoOpenBtn: "Анықтамалықты ашу", infoCloseBtn: "Жақсы",
-    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданамыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жідеру үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
+    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу Instruments және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданомыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жідеру үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
   }
 };
 function normalizeString(str) {
@@ -179,15 +179,15 @@ function loadBazaByVillage(villageId) {
         
         const cells = lineClean.split("|").map(function(c) { return c.trim(); });
         if (cells.length === 7) {
-          rawCategories.add(cells[0].toUpperCase());
+          rawCategories.add(cells[1].toUpperCase());
           window.app.allContacts.push({
-            category: cells[0].toUpperCase(),
-            title: cells[1],
-            phone: cells[2],
-            fio: cells[3],
-            desc: cells[4],
-            landmark: cells[5],
-            waStatus: cells[6]
+            category: cells[1].toUpperCase(),
+            title: cells[2],
+            phone: cells[3],
+            fio: cells[4],
+            desc: cells[5],
+            landmark: cells[6],
+            waStatus: cells[0]
           });
         }
       });
@@ -210,7 +210,7 @@ function loadBazaByVillage(villageId) {
       if (content) content.innerHTML = "<div style='text-align:center; padding:20px; color:#999;'>" + dict[window.app.currentLang].noResults + "</div>";
       setLang(window.app.currentLang);
     });
-        }
+}
 function clearDot(str) { if (!str || str.trim() === ".") return ""; return str.trim(); }
 
 function getClean10Digits(rawPhone) {
@@ -349,8 +349,7 @@ function renderCards() {
         if (window.app.currentLang === "kz") msg = "Саламатсыз ба! Контактіңізді ауыл анықтамалығынан (" + curUrl + ") таптым. ";
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
-        // ИСПРАВЛЕНО: Полностью возвращён ваш родной, рабочий формат ссылки wa.me без принудительной дописки 7 в начале
-                html += "<a href='https://whatsapp.com" + pureDigits + "&text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
+        html += "<a href='https://whatsapp.com" + pureDigits + "&text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
       }
       html += "</div></div>";
     });
@@ -368,7 +367,7 @@ function renderCards() {
     card.innerHTML = html;
     container.appendChild(card);
   });
-        }
+}
 let touchStartX = 0, touchStartY = 0;
 window.addEventListener("touchstart", function(e) {
   touchStartX = e.changedTouches.clientX;
@@ -448,7 +447,7 @@ function reporterWithErrorConfirm(cat, title, phone) {
   if (confirm(dict[window.app.currentLang].confirmErr)) {
     const curUrl = window.location.origin + window.location.pathname;
     let msg = "ОШИБКА В КАРТОЧКЕ!\nКатегория: " + cat + "\nНазвание: " + title + "\nТел: " + phone + "\nСсылка: " + curUrl;
-    window.location.href = "https://wa.me" + adminPhone + "?text=" + encodeURIComponent(msg);
+    window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
   }
 }
 
@@ -467,7 +466,7 @@ function sendNewContact() {
   if (!v || !cat || !name || !phone) { alert(dict[window.app.currentLang].mAlert); return; }
 
   let msg = "НОВАЯ АНКЕТА:\nПосёлок: " + v + "\nКатегория: " + cat + "\nНазвание: " + name + "\nТелефон: " + phone + " (" + hasWA + ")\nФИО: " + fio + "\nОписание: " + desc + "\nОриентир: " + loc;
-  window.location.href = "https://wa.me" + adminPhone + "?text=" + encodeURIComponent(msg);
+  window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
   closeModal("addModal");
 }
 
@@ -635,5 +634,4 @@ function setLang(lang) {
     fCat.appendChild(oCust);
   }
   renderCards();
-}
-  
+          }
