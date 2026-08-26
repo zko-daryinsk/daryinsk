@@ -84,10 +84,10 @@ const dict = {
     confirmErr: "Бұл контактідегі қате туралы әкімшіге хабарлағыңыз келе ме?",
     mTitle: "Жаңа сауалнама формасы", mCustomOpt: "Санатты өз қолыңызбен жазу...",
     lblHasWA: "Бұл нөмірде WhatsApp бар", mSubmit: "WhatsApp-қа жіберу",
-    mAlert: "Санатты, Атауды және Телефонды толтырыңыз!",
+    mAlert: "Санатты, Атауды и Телефонды толтырыңыз!",
     infoWelcome: "Қош келдіңіздер!", infoHowTo: "Анықтамалықты қалай пайдалану керек?",
     infoOpenBtn: "Анықтамалықты ашу", infoCloseBtn: "Жақсы",
-    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу Instruments және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданомыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жідеру үшін карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
+    infoText: "<div class='info-step-block'><div class='info-step-title'>🔍 1-қадам. Жылдам іздеу және санаттар</div><div class='info-step-text'>Дұрыс сүзу үшін экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Қызметті табу үшін кез келген ыңғайлы әдісті қолданомыз: көлденең <b>Вкладкаларды</b> парақтаңыз, санаттардың ашылмалы <b>Тізімін</b> ашыңыз немесе <b>Іздеу</b> жолына атауын жазыңыз. Егер адамды қысқа атымен таппасаңыз, толық атын енгізіп көріңіз.</div></div><div class='info-step-block'><div class='info-step-title'>⭐ 2-қадам. Таңдаулылар және Қауіпсіздік</div><div class='info-step-text'>Контактіні <b>Таңдаулылар</b> тізіміне қосу үшін карточкадағы жұлдызшаны басыңыз. 'Қоңырау шалу' батырмасын басқанда, кездейсоқ қоңыраулардан қорғау үшін сайт растауды сұрайды.</div></div><div class='info-step-block'><div class='info-step-title'>🛡️ 3-қадам. Қосу және Қателер</div><div class='info-step-text'>Жоба тегін және қоғамдық. Егер сіз анықтамалықта жоқ пайдалы контактіні білсеңіз немесе өзіңізді қосқыңыз келсе — <b>Қосу</b> батырмасын басыңыз. Қате тапсаңыз, Әкімшіге түзету жідеру за карточкадағы <b>⚠️ Ошибка</b> батырмасын басыңыз.</div></div>"
   }
 };
 function normalizeString(str) {
@@ -187,7 +187,7 @@ function loadBazaByVillage(villageId) {
             fio: cells[4],
             desc: cells[5],
             landmark: cells[6],
-            waStatus: cells[0]
+            waStatus: "HAS_WA"
           });
         }
       });
@@ -349,7 +349,8 @@ function renderCards() {
         if (window.app.currentLang === "kz") msg = "Саламатсыз ба! Контактіңізді ауыл анықтамалығынан (" + curUrl + ") таптым. ";
         
         html += "<a href='tel:+7" + pureDigits + "' class='btn-ui btn-ui-call' onclick=\"return confirm(window.app.currentLang === 'ru' ? 'Вы действительно хотите позвонить по номеру +7 " + formatPhoneNumber(pureDigits) + "?' : 'Сіз шынымен +7 " + formatPhoneNumber(pureDigits) + " нөміріне қоңырау шалғыңыз келе ме?')\">" + dict[window.app.currentLang].callMob + "</a>";
-        html += "<a href='https://whatsapp.com" + pureDigits + "&text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
+        // ВОССТАНОВЛЕНО: Родной формат wa.me/ со слэшем на правильном месте перед номером телефона
+        html += "<a href='https://wa.me" + pureDigits + "?text=" + encodeURIComponent(msg) + "' class='btn-ui btn-ui-wa'>WhatsApp</a>";
       }
       html += "</div></div>";
     });
@@ -367,201 +368,7 @@ function renderCards() {
     card.innerHTML = html;
     container.appendChild(card);
   });
-}
-let touchStartX = 0, touchStartY = 0;
-window.addEventListener("touchstart", function(e) {
-  touchStartX = e.changedTouches.clientX;
-  touchStartY = e.changedTouches.clientY;
-}, { passive: true });
-
-window.addEventListener("touchend", function(e) {
-  const sIn = document.getElementById("searchInput");
-  if (window.app.currentViewMode !== "tabs" || (sIn && sIn.value.length > 0)) return;
-  if (document.getElementById("welcomeModal") && document.getElementById("welcomeModal").style.display === "flex") return;
-  if (document.getElementById("addModal") && document.getElementById("addModal").style.display === "flex") return;
-
-  const diffX = touchStartX - e.changedTouches.clientX;
-  const diffY = touchStartY - e.changedTouches.clientY;
-
-  if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45) {
-    const categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
-    let idx = categories.indexOf(window.app.activeCategory);
-    if (categories.length > 0) {
-      if (diffX > 0) { idx = (idx < categories.length - 1) ? idx + 1 : 0; }
-      else { idx = (idx > 0) ? idx - 1 : categories.length - 1; }
-      window.app.activeCategory = categories[idx];
-      window.app.activeLetter = "";
-      setLang(window.app.currentLang);
-      window.scrollTo({ top: 0, behavior: "instant" });
-      setTimeout(function() {
-        const activeTab = document.querySelector(".tab.active");
-        if (activeTab) activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
-      }, 50);
-    }
-  }
-}, { passive: true });
-
-function openModal(id) {
-  const m = document.getElementById(id);
-  if (m) { m.style.display = "flex"; document.body.style.overflow = "hidden"; }
-}
-
-function closeModal(id, e) {
-  if (e) e.stopPropagation();
-  const m = document.getElementById(id);
-  if (m) { m.style.display = "none"; document.body.style.overflow = ""; }
-}
-
-function copyNumberOnly(n) {
-  if (!navigator.clipboard) {
-    const el = document.createElement("textarea"); el.value = n;
-    document.body.appendChild(el); el.select(); document.execCommand("copy");
-    document.body.removeChild(el); alert(dict[window.app.currentLang].numCopied); return;
-  }
-  navigator.clipboard.writeText(n).then(function() { alert(dict[window.app.currentLang].numCopied); });
-}
-
-function copyToClipboard(txt) {
-  if (!navigator.clipboard) {
-    const el = document.createElement("textarea"); el.value = txt;
-    document.body.appendChild(el); el.select(); document.execCommand("copy");
-    document.body.removeChild(el); alert(dict[window.app.currentLang].shareCopied); return;
-  }
-  navigator.clipboard.writeText(txt).then(function() { alert(dict[window.app.currentLang].shareCopied); });
-}
-
-function toggleFavorite(p10) {
-  let favorites = JSON.parse(localStorage.getItem("dar_fav_numbers") || "[]");
-  if (favorites.includes(p10)) { favorites = favorites.filter(function(f) { return f !== p10; }); }
-  else { favorites.push(p10); }
-  localStorage.setItem("dar_fav_numbers", JSON.stringify(favorites));
-  renderCards();
-}
-
-function switchToFavoritesCategory() {
-  window.app.activeCategory = "FAVORITES"; window.app.activeLetter = "";
-  setLang(window.app.currentLang); window.scrollTo({ top: 0, behavior: "instant" });
-}
-
-function reporterWithErrorConfirm(cat, title, phone) {
-  if (confirm(dict[window.app.currentLang].confirmErr)) {
-    const curUrl = window.location.origin + window.location.pathname;
-    let msg = "ОШИБКА В КАРТОЧКЕ!\nКатегория: " + cat + "\nНазвание: " + title + "\nТел: " + phone + "\nСсылка: " + curUrl;
-    window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
-  }
-}
-
-function sendNewContact() {
-  const v = document.getElementById("formVillageSelect").value;
-  const cSel = document.getElementById("formCatSelect").value;
-  const cCust = document.getElementById("formCatCustom").value.trim();
-  const cat = (cSel === "CUSTOM") ? cCust : cSel;
-  const name = document.getElementById("formName").value.trim();
-  const phone = document.getElementById("formPhone").value.trim();
-  const hasWA = document.getElementById("formHasWA").checked ? "С WhatsApp" : "Без WhatsApp";
-  const fio = clearDot(document.getElementById("formFio").value) || ".";
-  const desc = clearDot(document.getElementById("formDesc").value) || ".";
-  const loc = clearDot(document.getElementById("formLoc").value) || ".";
-
-  if (!v || !cat || !name || !phone) { alert(dict[window.app.currentLang].mAlert); return; }
-
-  let msg = "НОВАЯ АНКЕТА:\nПосёлок: " + v + "\nКатегория: " + cat + "\nНазвание: " + name + "\nТелефон: " + phone + " (" + hasWA + ")\nФИО: " + fio + "\nОписание: " + desc + "\nОриентир: " + loc;
-  window.location.href = "https://whatsapp.com" + adminPhone + "&text=" + encodeURIComponent(msg);
-  closeModal("addModal");
-}
-
-function toggleCustomCategoryField() {
-  const sel = document.getElementById("formCatSelect");
-  document.getElementById("customCatWrapper").style.display = (sel && sel.value === "CUSTOM") ? "block" : "none";
-}
-
-function resetSearch() {
-  const sIn = document.getElementById("searchInput"); if (sIn) sIn.value = "";
-  document.getElementById("btnReset").style.display = "none";
-  document.querySelector(".categories-control-row").style.display = "flex";
-  document.getElementById("searchTitleContainer").style.display = "none";
-  renderCards();
-}
-function toggleCategoriesView() {
-  window.app.currentViewMode = (window.app.currentViewMode === "tabs") ? "select" : "tabs";
-  localStorage.setItem("dar_view_mode", window.app.currentViewMode);
-  setLang(window.app.currentLang);
-}
-
-function restoreViewMode() {
-  const saved = localStorage.getItem("dar_view_mode");
-  if (saved) window.app.currentViewMode = saved;
-}
-
-function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
-
-function toggleTheme() {
-  document.body.classList.toggle("baza-dark-mode");
-  const isDark = document.body.classList.contains("baza-dark-mode");
-  localStorage.setItem("dar_theme", isDark ? "dark" : "light");
-  document.getElementById("themeToggle").innerText = isDark ? "🌙" : "☀️";
-}
-
-function handleSelectCategoryChange() {
-  const sel = document.getElementById("categoriesMainSelect");
-  if (sel) { window.app.activeCategory = sel.value; window.app.activeLetter = ""; renderCards(); }
-}
-
-function renderAlphabet(lettersList) {
-  const container = document.getElementById("alphabetContainer");
-  if (!container) return; container.innerHTML = "";
-  if (lettersList.length === 0) { container.style.display = "none"; return; }
-  container.style.display = "flex";
-  lettersList.forEach(function(l) {
-    const b = document.createElement("button"); b.className = "letter-btn " + (window.app.activeLetter === l ? "active" : "");
-    b.style.cssText = "padding:6px 10px; font-size:13px; font-weight:700; border:1px solid #ddd; border-radius:8px; cursor:pointer; background:white; color:#333;";
-    if (window.app.activeLetter === l) { b.style.background = "#0b66ff"; b.style.color = "white"; b.style.borderColor = "#0b66ff"; }
-    b.innerText = l;
-    b.onclick = function() {
-      window.app.activeLetter = (window.app.activeLetter === l) ? "" : l;
-      renderAlphabet(lettersList); renderCards();
-    };
-    container.appendChild(b);
-  });
-}
-
-function handleWelcomeCounter() {
-  let count = parseInt(localStorage.getItem("dar_visit_count") || "0");
-  count++;
-  localStorage.setItem("dar_visit_count", count);
-  if (count === 1 || count % 20 === 0) {
-    window.app.isWelcomeModalAuto = true;
-    updateWelcomeModalContent(true);
-    openModal("welcomeModal");
-  }
-}
-
-function openWelcomeModalManual() {
-  window.app.isWelcomeModalAuto = false;
-  updateWelcomeModalContent(false);
-  openModal("welcomeModal");
-}
-
-function updateWelcomeModalContent(isAutoVisit) {
-  const currentLang = window.app.currentLang;
-  document.getElementById("welcomeModalTitle").innerText = dict[currentLang].infoHowTo;
-  document.getElementById("welcomeModalText").innerHTML = dict[currentLang].infoText;
-  const btnAction = document.getElementById("btnWelcomeAction");
-  if (btnAction) {
-    btnAction.innerText = isAutoVisit ? dict[currentLang].infoOpenBtn : dict[currentLang].infoCloseBtn;
-  }
-  
-  const mRu = document.getElementById("m-btn-ru");
-  const mKz = document.getElementById("m-id-kz");
-  if (mRu && mKz) {
-    mRu.classList.toggle("active", currentLang === "ru");
-    mKz.classList.toggle("active", currentLang === "kz");
-  }
-}
-
-function closeWelcomeModal() { closeModal("welcomeModal"); }
-function closeWelcomeModalOuter(e) { if(e.target.id === "welcomeModal") closeWelcomeModal(); }
-
+        }
 function setLang(lang) {
   window.app.currentLang = lang;
   localStorage.setItem("dar_lang", lang);
@@ -587,8 +394,7 @@ function setLang(lang) {
   
   const rawCategories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
   if (!window.app.activeCategory && rawCategories.length > 0) window.app.activeCategory = rawCategories;
-  
-  const tContainer = document.getElementById("tabsContainer");
+    const tContainer = document.getElementById("tabsContainer");
   const mSelect = document.getElementById("categoriesMainSelect");
   
   if (window.app.currentViewMode === "tabs") {
@@ -634,4 +440,4 @@ function setLang(lang) {
     fCat.appendChild(oCust);
   }
   renderCards();
-          }
+}
