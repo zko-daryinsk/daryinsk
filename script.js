@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         let langRes = {}, dataRes = "";
 
         try {
-            const r = await fetch(`${basePath}languages.json?v=${Date.now()}`);
+           const r = await fetch(`./languages.json?v=${Date.now()}`);
             const text = await r.text();
             const cleanText = text.trim().replace(/^\uFEFF/, "");
             langRes = JSON.parse(cleanText);
@@ -40,7 +40,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         try {
-            const r = await fetch(`${basePath}baza_darinsk.txt?v=${Date.now()}`);
+            const r = await fetch(`./baza_darinsk.txt?v=${Date.now()}`);
             dataRes = await r.text();
         } catch (e) {
             console.error("Не удалось скачать базу контактов:", e);
