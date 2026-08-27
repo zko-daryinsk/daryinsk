@@ -1,4 +1,4 @@
-// Глобальное состояние приложения (Все тексты вынесены во внешний languages.json)
+// Глобальное состояние приложения  (Все тексты вынесены во внешний languages.json)
 window.app = {
     currentLang: localStorage.getItem("dar_lang") || "ru",
     activeCategory: "🚨 АВАРИЙНАЯ",
