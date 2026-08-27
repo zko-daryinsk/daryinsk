@@ -32,14 +32,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         window.app.nameSynonyms = langRes.nameSynonyms;
         window.app.villageAreaCodes = langRes.villageAreaCodes;
 
-        // ПАРСЕР БЛОКА №31: Чтение базы контактов с иммунитетом к пустоте
+                // БРОНЕБОЙНЫЙ ПАРСЕР: Читает базу Питона вопреки любым пробелам и символам переноса
         const lines = dataRes.split("\n");
         for (let line of lines) {
             const lineClean = line.trim();
             if (!lineClean || lineClean.startsWith("#") || !lineClean.includes("|")) continue;
 
-            const cells = lineClean.split("|").map(c => c.trim());
-            if (cells.length === 7) {
+            const cells = lineClean.split("|").map(c => c.trim().replace(/\r/g, ""));
+            if (cells.length >= 7) {
                 window.app.allContacts.push({
                     category: cells[0],
                     title: cells[1],
@@ -51,6 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 });
             }
         }
+
 
         setupEventListeners();
         handleWelcomeCounter();
