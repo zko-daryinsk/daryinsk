@@ -28,10 +28,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             const cleanText = text.trim().replace(/^\uFEFF/, "");
             langRes = JSON.parse(cleanText);
             
-            // ЩИТ РЕГИСТРА: вычищаем разницу между БОЛЬШИМИ и маленькими буквами
-            const cleanJson = {};
-            for (let key in langRes) {
-                cleanJson[key.toLowerCase()] = langRes[key];
+                        // ЧИСТОЕ ЧТЕНИЕ БЛОКОВ ИЗ JSON БЕЗ ИСКАЖЕНИЯ ИМЕН
+            const rawDict = langRes.dict || langRes.Dict || {};
+            if (rawDict.ru || rawDict.kz) window.app.dict = rawDict;
+            
+            window.app.categoryTranslations = langRes.categoryTranslations || {};
+            window.app.villageAreaCodes = langRes.villageAreaCodes || {};
+            window.app.welcomeText = langRes.welcomeText || {};
             }
             
             const rawDict = cleanJson.dict || {};
