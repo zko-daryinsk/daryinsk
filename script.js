@@ -5,16 +5,14 @@ window.app = {
     activeVillage: "Дарьинское",
     allContacts: [],
     corruptedLines: [],
-    currentViewMode: localStorage.getItem("dar_view_node") || "tabs",
     isManualOpen: false,
     dict: {
         ru: { title: "Справочник", searchPlaceholder: "Поиск...", btnCall: "Позвонить", noResults: "Ничего не найдено" },
         kz: { title: "Анықтамалық", searchPlaceholder: "Іздеу...", btnCall: "Қоңырау шалу", noResults: "Ничего не найдено" }
     },
     categoryTranslations: {},
-    searchTags: {},
-    nameSynonyms: {},
-    villageAreaCodes: {}
+    villageAreaCodes: {},
+    welcomeText: {}
 };
 
 const adminPhone = "77058120376";
@@ -23,30 +21,34 @@ document.addEventListener("DOMContentLoaded", async () => {
     try {
         let langRes = {}, dataRes = "";
 
-        // Скачиваем языковой файл с жесткой очисткой скрытого мусора BOM
+        // Скачиваем языковой файл с жесткой очисткой невидимого мусора BOM
         try {
             const r = await fetch("languages.json?v=" + Date.now());
             const text = await r.text();
             const cleanText = text.trim().replace(/^\uFEFF/, "");
             langRes = JSON.parse(cleanText);
             
-            // Защита от регистра: читаем и с большой, и с маленькой буквы
-            const rawDict = langRes.Dict || langRes.dict || {};
+            // ЩИТ РЕГИСТРА: вычищаем разницу между БОЛЬШИМИ и маленькими буквами
+            const cleanJson = {};
+            for (let key in langRes) {
+                cleanJson[key.toLowerCase()] = langRes[key];
+            }
+            
+            const rawDict = cleanJson.dict || {};
             if (rawDict.ru || rawDict.kz) window.app.dict = rawDict;
             
-            window.app.categoryTranslations = langRes.categoryTranslations || langRes.CategoryTranslations || {};
-            window.app.searchTags = langRes.searchTags || langRes.SearchTags || {};
-            window.app.nameSynonyms = langRes.nameSynonyms || langRes.NameSynonyms || {};
-            window.app.villageAreaCodes = langRes.villageAreaCodes || langRes.VillageAreaCodes || {};
+            window.app.categoryTranslations = cleanJson.categorytranslations || {};
+            window.app.villageAreaCodes = cleanJson.villageareacodes || {};
+            window.app.welcomeText = cleanJson.welcometext || {};
         } catch (e) {
-            console.error("Аварийная защита: словарь сломан, работаем на встроенной памяти", e);
+            console.error("Аварийный режим: languages.json поврежден. Загружена резервная память.", e);
         }
 
         try {
             const r = await fetch("baza_darinsk.txt?v=" + Date.now());
             dataRes = await r.text();
         } catch (e) {
-            console.error("Не удалось загрузить базу контактов", e);
+            console.error("Критическая ошибка загрузки базы контактов.", e);
         }
         const lines = dataRes.split("\n");
         for (let i = 0; i < lines.length; i++) {
@@ -54,13 +56,13 @@ document.addEventListener("DOMContentLoaded", async () => {
             if (!lineClean || lineClean.startsWith("#")) continue;
 
             if (!lineClean.includes("|")) {
-                window.app.corruptedLines.push({ lineNum: i + 1, raw: lineClean, reason: "Нет палочек |" });
+                window.app.corruptedLines.push({ lineNum: i + 1, raw: lineClean, reason: "Нет разделительных палочек |" });
                 continue;
             }
 
             const cells = lineClean.split("|").map(c => c.trim().replace(/\r/g, ""));
             if (cells.length < 5) {
-                window.app.corruptedLines.push({ lineNum: i + 1, raw: lineClean, reason: "Критически мало граф" });
+                window.app.corruptedLines.push({ lineNum: i + 1, raw: lineClean, reason: "Критически мало ячеек в строке" });
                 continue;
             }
 
@@ -85,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         renderAlphabet();
         initTheme();
     } catch (err) {
-        console.error("Критический сбой инициализации:", err);
+        console.error("Критический сбой инициализации конвейера:", err);
     }
 });
 
@@ -99,7 +101,6 @@ function setupEventListeners() {
     document.getElementById("addContactBtn")?.addEventListener("click", openAddModal);
     document.getElementById("closeModal")?.addEventListener("click", closeAddModal);
     document.getElementById("contactForm")?.addEventListener("submit", handleFormSubmit);
-    document.getElementById("viewModeToggle")?.addEventListener("click", toggleViewMode);
     document.getElementById("btnInfo")?.addEventListener("click", openWelcomeModalManual);
     document.getElementById("btnWelcomeAction")?.addEventListener("click", closeWelcomeModal);
     document.getElementById("m-btn-ru")?.addEventListener("click", () => setWelcomeModalLang("ru"));
@@ -140,86 +141,50 @@ function setLang(themeLang) {
     if (select) {
         const currentVal = select.value || window.app.activeVillage;
         select.innerHTML = `
-            <option value="Дарьинское">${dict.v_daryinsk || "Дарьинское"}</option>
-            <option value="Трёкино">${dict.v_trekin || "Трёкино"}</option>
-            <option value="Рубежка">${dict.v_rubezh || "Рубежка"}</option>
-            <option value="Озёрное">${dict.v_ozern || "Озёрное"}</option>
-            <option value="Володарка">${dict.v_volobar || "Володарка"}</option>
+            <option value="Дарьинское">${dict.v_daryinsk || "село Дарьинское"}</option>
+            <option value="Трёкино">${dict.v_trekin || "село Байконыс"}</option>
+            <option value="Рубежка">${dict.v_rubezh || "село Рубежинское"}</option>
+            <option value="Озёрное">${dict.v_ozern || "село Озерное"}</option>
+            <option value="Володарка">${dict.v_volobar || "село Володарское"}</option>
         `;
         select.value = currentVal;
     }
-    updateViewModeToggleButton();
     renderCategories();
     renderContacts();
 }
 
-function toggleViewMode() {
-    window.app.currentViewMode = window.app.currentViewMode === "tabs" ? "select" : "tabs";
-    localStorage.setItem("dar_view_node", window.app.currentViewMode);
-    updateViewModeToggleButton();
-    renderCategories();
-}
-
-function updateViewModeToggleButton() {
-    const btn = document.getElementById("viewModeToggle");
-    if (!btn) return;
-    const dict = window.app.dict[window.app.currentLang] || {};
-    if (window.app.currentViewMode === "tabs") {
-        btn.textContent = "📱";
-        btn.title = dict.modeSelect || "Переключить на список";
-    } else {
-        btn.textContent = "📋";
-        btn.title = dict.modeTabs || "Переключить на вкладки";
-    }
-}
 function renderCategories() {
     const labsContainer = document.getElementById("labsContainer");
     if (!labsContainer) return;
     labsContainer.innerHTML = "";
-    const categories = Object.keys(window.app.categoryTranslations || {});
     
-    if (window.app.currentViewMode === "select") {
-        labsContainer.style.display = "flex";
-        const wrapper = document.createElement("div");
-        wrapper.className = "category-select-wrapper";
-        const select = document.createElement("select");
-        select.className = "category-mobile-select";
+    // Вытаскиваем категории напрямую из базы данных
+    const uniqueCats = new Set(window.app.allContacts.map(c => c.category));
+    const categories = Array.from(uniqueCats);
+    
+    categories.forEach(cat => {
+        const btn = document.createElement("button");
+        btn.className = "lab-btn" + (cat === window.app.activeCategory ? " active" : "");
         
-        categories.forEach(cat => {
-            const opt = document.createElement("option");
-            opt.value = cat;
-            opt.textContent = window.app.categoryTranslations[cat]?.[window.app.currentLang] || cat;
-            if (cat === window.app.activeCategory) opt.selected = true;
-            select.appendChild(opt);
-        });
-        select.addEventListener("change", (e) => {
-            window.app.activeCategory = e.target.value;
+        // Берем перевод из JSON, если его нет - оставляем имя из базы капсом
+        const transBlock = window.app.categoryTranslations[cat] || {};
+        btn.textContent = transBlock[window.app.currentLang] || cat;
+        
+        btn.addEventListener("click", () => {
+            window.app.activeCategory = cat;
             window.app.activeLetter = "";
             renderAlphabet();
+            renderCategories();
             renderContacts();
         });
-        wrapper.appendChild(select);
-        labsContainer.appendChild(wrapper);
-    } else {
-        labsContainer.style.display = "flex";
-        categories.forEach(cat => {
-            const btn = document.createElement("button");
-            btn.className = "lab-btn" + (cat === window.app.activeCategory ? " active" : "");
-            btn.textContent = window.app.categoryTranslations[cat]?.[window.app.currentLang] || cat;
-            btn.addEventListener("click", () => {
-                window.app.activeCategory = cat;
-                window.app.activeLetter = "";
-                renderAlphabet();
-                renderCategories();
-                renderContacts();
-            });
-            labsContainer.appendChild(btn);
-        });
-    }
+        labsContainer.appendChild(btn);
+    });
 }
 
 function handleVillageChange(e) {
     window.app.activeVillage = e.target.value;
+    window.app.activeLetter = "";
+    renderAlphabet();
     renderContacts();
 }
 
@@ -232,19 +197,31 @@ function renderAlphabet() {
         return;
     }
     container.style.display = "flex";
-    const currentLangContacts = window.app.allContacts.filter(c => c.category === window.app.activeCategory && c.address === window.app.activeVillage);
+    
+    // Фильтруем контакты по Умному транслятору сёл
+    const targetKey = window.app.activeVillage.toLowerCase();
+    const allowedNames = window.app.villageAreaCodes[targetKey] || [targetKey];
+    
+    const currentVillageContacts = window.app.allContacts.filter(c => {
+        const isCat = c.category === window.app.activeCategory;
+        const isVill = allowedNames.includes(c.address.toLowerCase());
+        return isCat && isVill;
+    });
+    
     const lettersSet = new Set();
-    currentLangContacts.forEach(c => {
+    currentVillageContacts.forEach(c => {
         if (c.title) {
             const firstLetter = c.title.trim().charAt(0).toUpperCase();
             if (/[А-ЯЁA-Z]/.test(firstLetter)) lettersSet.add(firstLetter);
         }
     });
+    
     const sortedLetters = Array.from(lettersSet).sort();
     if (sortedLetters.length === 0) {
         container.style.display = "none";
         return;
     }
+    
     sortedLetters.forEach(letter => {
         const btn = document.createElement("button");
         btn.className = "letter-btn" + (letter === window.app.activeLetter ? " active" : "");
@@ -266,7 +243,7 @@ function renderContacts() {
     const favs = JSON.parse(localStorage.getItem("dar_favs") || "[]");
 
     if (window.app.activeCategory === "ADMIN_ERRORS") {
-        renderAdminErrors(container, dict);
+        renderAdminErrors(container);
         return;
     }
 
@@ -274,7 +251,15 @@ function renderContacts() {
     if (window.app.activeCategory === "FAVORITES") {
         filtered = filtered.filter(c => favs.includes(c.phone));
     } else {
-        filtered = filtered.filter(c => c.category === window.app.activeCategory && c.address === window.app.activeVillage);
+        const targetKey = window.app.activeVillage.toLowerCase();
+        const allowedNames = window.app.villageAreaCodes[targetKey] || [targetKey];
+        
+        filtered = filtered.filter(c => {
+            const isCat = c.category === window.app.activeCategory;
+            const isVill = allowedNames.includes(c.address.toLowerCase());
+            return isCat && isVill;
+        });
+
         if (window.app.activeLetter) {
             filtered = filtered.filter(c => c.title && c.title.trim().charAt(0).toUpperCase() === window.app.activeLetter);
         }
@@ -286,25 +271,7 @@ function renderContacts() {
             const inName = c.name.toLowerCase().includes(searchVal);
             const inDesc = c.desc.toLowerCase().includes(searchVal);
             const inPhone = c.phone.includes(searchVal);
-            
-            let inSynonyms = false;
-            const checkString = c.category === "ЖИТЕЛИ" ? c.title : c.name;
-            if (checkString) {
-                const words = checkString.toLowerCase().split(/\s+/);
-                for (let w of words) {
-                    const syn = window.app.nameSynonyms[w];
-                    if (syn && typeof syn === "string" && syn.toLowerCase().includes(searchVal)) {
-                        inSynonyms = true;
-                        break;
-                    }
-                }
-            }
-            let inTags = false;
-            if (window.app.searchTags[window.app.activeCategory]) {
-                const tags = window.app.searchTags[window.app.activeCategory][window.app.currentLang] || [];
-                inTags = tags.some(t => t.toLowerCase().includes(searchVal));
-            }
-            return inTitle || inName || inDesc || inPhone || inSynonyms || inTags;
+            return inTitle || inName || inDesc || inPhone;
         });
     }
 
@@ -317,6 +284,7 @@ function renderContacts() {
         const card = document.createElement("div");
         card.className = "contact-card";
         const isFav = favs.includes(c.phone);
+        
         card.innerHTML = `
             <div class="card-header">
                 <div class="card-title">${c.title}</div>
@@ -325,24 +293,36 @@ function renderContacts() {
             ${c.name ? `<div class="card-meta">👤 ${c.name}</div>` : ""}
             ${c.desc ? `<div class="card-desc">${c.desc}</div>` : ""}
             <div class="card-actions">
-                <a href="tel:${c.phone}" class="action-btn call-btn">📞 ${dict.btnCall || "Позвонить"}</a>
+                <button class="action-btn call-btn">📞 ${dict.btnCall || "Позвонить"}</button>
                 ${c.waStatus === "$" ? `<a href="https://wa.me{c.phone}" target="_blank" class="action-btn wa-btn">💬 WhatsApp</a>` : ""}
             </div>
         `;
+
         card.querySelector(".fav-star-btn").addEventListener("click", () => {
             toggleFavorite(c.phone);
             renderContacts();
         });
+
+        // ЗАЩИТА ОТ СЛУЧАЙНОГО ЗВОНКА ИЗ КАРМАНА
+        card.querySelector(".call-btn").addEventListener("click", () => {
+            const confirmMsg = window.app.currentLang === "kz" 
+                ? `Нөміріне қоңырау шалуды растайсыз ба: ${c.phone}?` 
+                : `Вы точно хотите позвонить по номеру: ${c.phone}?`;
+            if (window.confirm(confirmMsg)) {
+                window.location.href = `tel:${c.phone}`;
+            }
+        });
+
         container.appendChild(card);
     });
 }
 
-function renderAdminErrors(container, dict) {
+function renderAdminErrors(container) {
     if (window.app.corruptedLines.length === 0) {
         container.innerHTML = `
-            <div class="contact-card" style="border-left: 5px solid #28a745; background: #e2f0d9;">
-                <div class="card-title" style="color: #28a745;">🏆 База идеальна!</div>
-                <div class="card-desc" style="margin-top: 8px; color: #333;">В файле базы данных из ${window.app.allContacts.length} строк не найдено ни одной системной ошибки. Все палочки на месте!</div>
+            <div class="contact-card" style="border-left: 5px solid #28a745; background: #e2f0d9; padding: 12px; border-radius: 12px;">
+                <div class="card-title" style="color: #28a745; font-weight:700;">🏆 База идеальна!</div>
+                <div class="card-desc" style="margin-top: 8px; color: #333; font-size:14px;">В файле базы данных из ${window.app.allContacts.length} строк не найдено ни одной системной ошибки. Все палочки на месте!</div>
             </div>`;
         return;
     }
@@ -352,11 +332,11 @@ function renderAdminErrors(container, dict) {
         card.style.borderLeft = "5px solid #dc3545";
         card.innerHTML = `
             <div class="card-header">
-                <div class="card-title" style="color: #dc3545;">⚠️ Ошибка структуры</div>
+                <div class="card-title" style="color: #dc3545; font-weight:700;">⚠️ Ошибка структуры</div>
                 <div style="font-weight: bold; color: #666;">Строка: ${err.lineNum}</div>
             </div>
             <div class="card-meta" style="color: #dc3545;">Причина: ${err.reason}</div>
-            <div class="card-desc" style="background: #f8d7da; padding: 6px; border-radius: 4px; font-family: monospace; margin-top: 8px;">${err.raw}</div>
+            <div class="card-desc" style="background: #f8d7da; padding: 8px; border-radius: 6px; font-family: monospace; margin-top: 8px; color:#721c24;">${err.raw}</div>
         `;
         container.appendChild(card);
     });
@@ -446,24 +426,24 @@ function setWelcomeModalLang(lang) {
     const modalAction = document.getElementById("btnWelcomeAction");
     if (!modalTitle || !modalText || !modalAction) return;
 
+    const welcomeData = window.app.welcomeText[lang] || "";
+    
+    // УМНАЯ НАРЕЗКА СТРОК ИЗ JSON ПО ЗНАКАМ РАВЕНСТВА ===
+    if (welcomeData.includes("===")) {
+        const paragraphs = welcomeData.split("===").map(p => p.trim());
+        modalText.innerHTML = paragraphs.map(p => `<div class="info-step-block">${p}</div>`).join("");
+    } else {
+        modalText.innerHTML = `<div class="info-step-block">${welcomeData}</div>`;
+    }
+
     if (lang === "kz") {
         modalTitle.textContent = "Анықтамалықты қалай пайдалану керек?";
         modalAction.textContent = "Түсінікті";
-        modalText.innerHTML = `
-            <div class="info-step-block"><div class="info-step-title">🔍 1-қадам</div>Экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Тұрмыстық сөздер бойынша іздеуді (нан, донер, жөндеу) немесе санаттар тізімін пайдаланыңыз.</div>
-            <div class="info-step-block"><div class="info-step-title">⭐ 2-қадам</div>Жұлдызшаны басу арқылы шеберлерді Таңдаулыларға қосыңыз. Қоңырау шалу батырмасы кездейсоқ шақырулардан қорғау үшін растауды сұрайды.</div>
-            <div class="info-step-block"><div class="info-step-title">🛡️ 3-қадам</div>Жоба тегін. Жұмыс кестесі бар контактіні қосу үшін "+ Қосу" батырмасын басыңыз. Қате тапсаңыз — "⚠️ Қате" батырмасын басыңыз.</div>
-        `;
         document.getElementById("m-btn-kz").className = "modal-lang-btn active";
         document.getElementById("m-btn-ru").className = "modal-lang-btn";
     } else {
         modalTitle.textContent = "Как пользоваться справочником?";
         modalAction.textContent = "Понятно";
-        modalText.innerHTML = `
-            <div class="info-step-block"><div class="info-step-title">🔍 Шаг 1</div>Выбирайте свой посёлок вверху экрана. Используйте живой поиск по бытовым словам (хлеб, донер, ремонт) или ленту вкладок.</div>
-            <div class="info-step-block"><div class="info-step-title">⭐ Шаг 2</div>Добавляйте мастеров в Избранное нажатием на звёздочку. Кнопка звонка попросит подтверждение для защиты от случайных вызовов в кармане.</div>
-            <div class="info-step-block"><div class="info-step-title">🛡️ Шаг 3</div>Проект бесплатный. Чтобы добавить контакт с графиком работы, нажмите "+ Добавить". Если нашли неточность — нажмите кнопку "⚠️ Ошибка".</div>
-        `;
         document.getElementById("m-btn-ru").className = "modal-lang-btn active";
         document.getElementById("m-btn-kz").className = "modal-lang-btn";
     }
