@@ -50,7 +50,8 @@ const categoryTranslations = {
 };
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const r = await fetch("baza_darinsk.txt?v=" + Date.now());
+        
+        const r = await fetch("/daryinsk/baza_darinsk.txt?v=" + Date.now());
         const dataRes = await r.text();
 
         loadContacts(dataRes);
