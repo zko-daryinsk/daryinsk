@@ -50,8 +50,7 @@ const categoryTranslations = {
 };
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const basePath = window.location.pathname.includes('/daryinsk') ? '/daryinsk/' : './';
-        const r = await fetch(`${basePath}baza_darinsk.txt?v=${Date.now()}`);
+        const r = await fetch("baza_darinsk.txt?v=" + Date.now());
         const dataRes = await r.text();
 
         loadContacts(dataRes);
