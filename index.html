@@ -1,82 +1,125 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Справочник посёлков</title>
-    <link rel="stylesheet" href="style.css?v=ultimate_final_win_2026">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Справочник посёлков</title>
+  <!-- ИСПРАВЛЕНО: Изменена версия стиля на v=999 для сброса кэша -->
+  <link rel="stylesheet" href="style.css?v=999">
 </head>
 <body>
 
-    <header>
-        <div class="top-row">
-            <button class="circle-btn" id="themeToggle" onclick="toggleTheme()">🌓</button>
-            <div class="title-site" id="siteTitle">Справочник</div>
-            <div class="lang-panel">
-                <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
-                <span class="lang-btn" id="id-kz" onclick="setLang('kz')">KZ</span>
-            </div>
-        </div>
-
-        <div id="villageSelectorContainer"></div>
-        
-        <div class="search-row">
-            <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Поиск...">
-            <button class="btn-reset" id="btnReset" onclick="resetSearch()">Сбросить</button>
-        </div>
-                <div style="display:flex; gap:8px; margin-bottom:12px;">
-            <button class="btn-action-main" id="btnFavAction" style="margin:0; flex:1; background:#ffb300; box-shadow:0 2px 4px rgba(255,179,0,0.3);" onclick="switchToFavoritesCategory()">⭐ Избранное</button>
-            <button class="btn-action-main" id="btnMainAction" style="margin:0; flex:1;" onclick="openModal('addModal')">➕ Добавить</button>
-        </div>
-
-        <div class="categories-control-row">
-            <button class="view-toggle-btn" id="btnViewToggle" onclick="toggleCategoriesView()">👁‍🗨 Вкладки</button>
-            <div class="tabs" id="tabsContainer"></div>
-            <select class="categories-select" id="categoriesMainSelect" onchange="handleSelectCategoryChange()" style="display: none;"></select>
-        </div>
-    </header>
-
-    <div id="searchTitleContainer" style="display:none; padding:10px 12px 2px 12px; font-weight:700; color:#4a5568; font-size:14px;"></div>
-    <div id="alphabetContainer" style="display:none; padding:10px 12px 2px 12px; gap:5px; flex-wrap:wrap; justify-content:center;"></div>
-    <main id="content"></main>
-
-    <button id="btnTop" onclick="scrollToTop()">▲</button>
-        <div class="modal" id="addModal" onclick="closeModal('addModal', event)">
-        <div class="modal-content" onclick="event.stopPropagation()">
-            <h3 id="modalTitle" style="margin-bottom:8px;">Новая анкетная форма</h3>
-            
-            <div class="form-group">
-                <select id="formVillageSelect" style="border: 2px solid #0b66ff; font-weight:700; color:#0b66ff;"></select>
-            </div>
-
-            <div class="form-group">
-                <select id="formCatSelect" onchange="toggleCustomCategoryField()"></select>
-            </div>
-            <div class="form-group" id="customCatWrapper" style="display: none;">
-                <input type="text" id="formCatCustom" placeholder="Впишите новую категорию руками">
-            </div>
-            <div class="form-group"><input type="text" id="formName" placeholder="Название объекта или тип мастера"></div>
-            <div class="form-group"><input type="text" id="formPhone" placeholder="Телефон"></div>
-            
-            <div style="display:flex; align-items:center; gap:8px; margin:4px 0; font-size:14px; font-weight:500;">
-                <input type="checkbox" id="formHasWA" checked style="width:18px; height:18px; cursor:pointer;">
-                <label for="formHasWA" id="lblHasWA" style="cursor:pointer;">На этом номере есть WhatsApp</label>
-            </div>
-
-            <div class="form-group"><input type="text" id="formFio" placeholder="Имя Фамилия Отчество"></div>
-            <div class="form-group"><textarea id="formDesc" rows="3" placeholder="Описание услуги или товара"></textarea></div>
-            <div class="form-group"><input type="text" id="formLoc" placeholder="Ориентир / Адрес"></div>
-            
-            <div style="display:flex; gap:8px; margin-top:5px;">
-                <button class="btn-ui" style="background:#6c757d; margin:0;" id="btnCancelForm" onclick="closeModal('addModal')">Отмена</button>
-                <button class="btn-ui btn-ui-call" style="flex:2; margin:0;" id="btnSubmitForm" onclick="sendNewContact()">Отправить в WhatsApp</button>
-            </div>
-        </div>
+  <header id="mainSiteHeader">
+    <div class="top-row">
+      <button class="circle-btn" id="themeToggle" onclick="toggleTheme()">☀️</button>
+      <div class="title-site" id="siteTitle">Справочник</div>
+      <button class="circle-btn" id="btnInfo" onclick="openWelcomeModalManual()">ℹ️</button>
+      <div class="lang-panel">
+        <span class="lang-btn active" id="btn-ru" onclick="setLang('ru')">RU</span>
+        <span class="lang-btn" id="id-kz" onclick="setLang('kz')">KZ</span>
+      </div>
     </div>
 
-        <script src="script.js?v=super_final_win_2026"></script>
-    <script>
-        document.addEventListener("DOMContentLoaded", initApp);
-    </script>
+    <div id="villageSelectorContainer"></div>
+
+    <div class="search-row">
+      <input type="text" id="searchInput" oninput="handleSearch()" placeholder="Поиск...">
+      <button class="btn-reset" id="btnReset" onclick="resetSearch()">Сбросить</button>
+    </div>
+
+    <div style="display:flex; gap:8px; margin-bottom:12px;">
+      <button class="btn-action-main" id="btnFavAction" style="margin:0; flex:1;" onclick="switchToFavoritesCategory()">Избранное</button>
+      <button class="btn-action-main" id="btnMainAction" style="margin:0; flex:1;" onclick="openModal('addModal')">Добавить</button>
+    </div>
+
+    <div class="categories-control-row">
+      <button class="view-toggle-btn" id="btnViewToggle" onclick="toggleCategoriesView()">👁️ Вкладки</button>
+      <div class="tabs" id="tabsContainer"></div>
+      <select class="categories-select" id="categoriesMainSelect" onchange="handleSelectCategoryChange()" style="display: none;"></select>
+    </div>
+  </header>
+
+  <div id="searchTitleContainer" style="display:none; padding:10px 12px 2px 12px; font-weight:700; color:#4a5568; font-size:14px;"></div>
+  <div id="alphabetContainer" style="display:none; padding:10px 12px 2px 12px; gap:5px; flex-wrap:wrap; justify-content:center;"></div>
+  
+  <main id="content"></main>
+
+  <button id="btnTop" onclick="scrollToTop()">▲</button>
+    <!-- ОБЪЕДИНЕННОЕ ПРИВЕТСТВЕННОЕ И ИНФОРМАЦИОННОЕ ОКНО С ВЫБОРОМ ЯЗЫКА ПО ЦЕНТРУ -->
+  <div class="modal" id="welcomeModal" onclick="closeWelcomeModalOuter(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <button class="modal-close-x" onclick="closeWelcomeModal()">&times;</button>
+      
+      <div style="display:flex; justify-content:center; margin-bottom:12px; margin-top:4px;">
+        <div class="lang-panel" id="modal-lang-panel">
+          <span class="lang-btn active" id="m-btn-ru" onclick="setLang('ru')">RU</span>
+          <span class="lang-btn" id="m-id-kz" onclick="setLang('kz')">KZ</span>
+        </div>
+      </div>
+
+      <h3 id="welcomeModalTitle" style="margin-bottom:16px; font-size:20px; font-weight:800; text-align:center;">Добро пожаловать!</h3>
+      
+      <div id="welcomeModalText" class="notranslate" style="margin-bottom:20px;"></div>
+
+      <button class="btn-action-main" id="btnWelcomeAction" style="width:100%; background:#0b66ff;" onclick="closeWelcomeModal()">Открыть справочник</button>
+    </div>
+  </div>
+
+  <!-- МОДАЛЬНОЕ ОКНО АНКЕТЫ (+ ДОБАВИТЬ) -->
+  <div class="modal" id="addModal" onclick="closeModal('addModal', event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h3 id="modalTitle" style="margin-bottom:8px;">Новая анкетная форма</h3>
+      
+      <div class="form-group">
+        <select id="formVillageSelect" style="border: 2px solid #0b66ff; font-weight:700; color:#0b66ff;"></select>
+      </div>
+
+      <div class="form-group">
+        <select id="formCatSelect" onchange="toggleCustomCategoryField()"></select>
+      </div>
+
+      <div class="form-group" id="customCatWrapper" style="display: none;">
+        <input type="text" id="formCatCustom" placeholder="Впишите новую категорию руками">
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="formName" placeholder="Название объекта или тип мастера">
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="formPhone" placeholder="Телефон">
+      </div>
+
+      <div style="display:flex; align-items:center; gap:8px; margin:4px 0; font-size:14px; font-weight:500;">
+        <input type="checkbox" id="formHasWA" style="width:18px; height:18px; cursor:pointer;">
+        <label for="formHasWA" id="lblHasWA" style="cursor:pointer;">На этом номере есть WhatsApp</label>
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="formFio" placeholder="Имя Фамилия Отчество">
+      </div>
+
+      <div class="form-group">
+        <textarea id="formDesc" rows="3" placeholder="Описание услуги или товара"></textarea>
+      </div>
+
+      <div class="form-group">
+        <input type="text" id="formLoc" placeholder="Ориентир / Адрес">
+      </div>
+
+      <div style="display:flex; gap:8px; margin-top:5px;">
+        <button class="btn-ui" style="background:#6c757d; margin:0;" onclick="closeModal('addModal', event)">Отмена</button>
+        <button class="btn-ui btn-ui-call" style="flex:2; margin:0;" id="btnSubmitForm" onclick="sendNewContact()">Отправить в WhatsApp</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ИСПРАВЛЕНО: Установлена новая версия ?v=999 для сброса кэша скрипта -->
+  <script src="script.js?v=999"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", function() {
+      initApp();
+    });
+  </script>
 </body>
 </html>
