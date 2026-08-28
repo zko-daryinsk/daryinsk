@@ -21,29 +21,32 @@ const adminPhone = "77058120376";
 
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        const basePath = window.location.pathname.includes('/daryinsk') ? '/daryinsk/' : './';
         let langRes = {}, dataRes = "";
 
+        // Скачиваем языковой файл с жесткой очисткой скрытого мусора BOM
         try {
-           const r = await fetch(`./languages.json?v=${Date.now()}`);
+            const r = await fetch("languages.json?v=" + Date.now());
             const text = await r.text();
             const cleanText = text.trim().replace(/^\uFEFF/, "");
             langRes = JSON.parse(cleanText);
             
-            if (langRes.Dict) window.app.dict = langRes.Dict;
-            window.app.categoryTranslations = langRes.categoryTranslations || {};
-            window.app.searchTags = langRes.searchTags || {};
-            window.app.nameSynonyms = langRes.nameSynonyms || {};
-            window.app.villageAreaCodes = langRes.villageAreaCodes || {};
+            // Защита от регистра: читаем и с большой, и с маленькой буквы
+            const rawDict = langRes.Dict || langRes.dict || {};
+            if (rawDict.ru || rawDict.kz) window.app.dict = rawDict;
+            
+            window.app.categoryTranslations = langRes.categoryTranslations || langRes.CategoryTranslations || {};
+            window.app.searchTags = langRes.searchTags || langRes.SearchTags || {};
+            window.app.nameSynonyms = langRes.nameSynonyms || langRes.NameSynonyms || {};
+            window.app.villageAreaCodes = langRes.villageAreaCodes || langRes.VillageAreaCodes || {};
         } catch (e) {
-            console.error("Языковой файл сломан, включена аварийная защита:", e);
+            console.error("Аварийная защита: словарь сломан, работаем на встроенной памяти", e);
         }
 
         try {
-            const r = await fetch(`./baza_darinsk.txt?v=${Date.now()}`);
+            const r = await fetch("baza_darinsk.txt?v=" + Date.now());
             dataRes = await r.text();
         } catch (e) {
-            console.error("Не удалось скачать базу контактов:", e);
+            console.error("Не удалось загрузить базу контактов", e);
         }
         const lines = dataRes.split("\n");
         for (let i = 0; i < lines.length; i++) {
@@ -448,7 +451,7 @@ function setWelcomeModalLang(lang) {
         modalAction.textContent = "Түсінікті";
         modalText.innerHTML = `
             <div class="info-step-block"><div class="info-step-title">🔍 1-қадам</div>Экранның жоғарғы жағынан өз ауылыңызды таңдаңыз. Тұрмыстық сөздер бойынша іздеуді (нан, донер, жөндеу) немесе санаттар тізімін пайдаланыңыз.</div>
-            <div class="info-step-block"><div class="info-step-title">⭐ 2-қадам</div>Жұлдызшаны басу арқылы шеберлерді Таңдаулыларғақосыңыз. Қоңырау шалу батырмасы кездейсоқ шақырулардан қорғау үшін растауды сұрайды.</div>
+            <div class="info-step-block"><div class="info-step-title">⭐ 2-қадам</div>Жұлдызшаны басу арқылы шеберлерді Таңдаулыларға қосыңыз. Қоңырау шалу батырмасы кездейсоқ шақырулардан қорғау үшін растауды сұрайды.</div>
             <div class="info-step-block"><div class="info-step-title">🛡️ 3-қадам</div>Жоба тегін. Жұмыс кестесі бар контактіні қосу үшін "+ Қосу" батырмасын басыңыз. Қате тапсаңыз — "⚠️ Қате" батырмасын басыңыз.</div>
         `;
         document.getElementById("m-btn-kz").className = "modal-lang-btn active";
