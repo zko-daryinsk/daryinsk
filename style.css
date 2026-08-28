@@ -1,6 +1,25 @@
-/* ======================================================================
-   1. СБРОС СТИЛЕЙ, ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ И КАЗАХСТАНСКАЯ ПАЛИТРА
-   ====================================================================== */
+:root {
+    --bg-color: #f4f6f9;
+    --card-bg: #ffffff;
+    --text-main: #333333;
+    --text-muted: #666666;
+    --primary: #00529b;
+    --accent: #ffcb05;
+    --border-color: #e0e0e0;
+    --shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+[data-theme="dark"] {
+    --bg-color: #121212;
+    --card-bg: #1e1e1e;
+    --text-main: #e0e0e0;
+    --text-muted: #aaaaaa;
+    --primary: #1f76c2;
+    --accent: #ffcb05;
+    --border-color: #333333;
+    --shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
 * {
     box-sizing: border-box;
     margin: 0;
@@ -8,283 +27,228 @@
     -webkit-tap-highlight-color: transparent;
 }
 
-:root {
-    --bg-main: #f4f6f9;
-    --bg-header: #ffffff;
-    --text-main: #2c3e50;
-    --text-muted: #7f8c8d;
-    --border-color: #e2e8f0;
-    --card-bg: #ffffff;
-    
-    /* ФИРМЕННЫЕ ЦВЕТА ПРОЕКТА */
-    --accent-kz-blue: #00B3CC;  /* Небесно-голубой цвет флага РК */
-    --accent-kz-gold: #E5A93B;  /* Благородное степное золото герба РК */
-    --accent-wa-green: #25D366; /* Канонический бренд-цвет WhatsApp */
-}
-
-/* ДВОЙНАЯ БРОНЕБОЙНАЯ ЗАЩИТА ТЕМНОЙ ТЕМЫ */
-body.dark-mode, body[data-theme="dark"] {
-    --bg-main: #121212;
-    --bg-header: #1e1e1e;
-    --text-main: #e2e8f0;
-    --text-muted: #a0aec0;
-    --border-color: #2d3748;
-    --card-bg: #1a1a1a;
-    
-    /* Ночная приглушенная адаптация цветов */
-    --accent-kz-blue: #009cb3;
-    --accent-kz-gold: #c99332;
-    --accent-wa-green: #1eaf53;
-}
-
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    background-color: var(--bg-main);
+    background-color: var(--bg-color);
     color: var(--text-main);
     line-height: 1.4;
-    transition: background-color 0.2s ease, color 0.2s ease;
+    padding-bottom: 70px;
 }
 
-.notranslate { translate: no !important; }
-
-/* ======================================================================
-   2. ЛИПКАЯ ШАПКА САЙТА (STICKY HEADER)
-   ====================================================================== */
-.sticky-header {
-    position: -webkit-sticky;
+/* ШАПКА САЙТА */
+.site-header {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--border-color);
+    padding: 12px;
     position: sticky;
     top: 0;
-    z-index: 1000;
-    background-color: var(--bg-header);
-    border-bottom: 1px solid var(--border-color);
-    padding: 10px 12px 6px 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    z-index: 100;
+    box-shadow: var(--shadow);
 }
 
-.header-top-line {
+.header-top {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 8px;
+    margin-bottom: 10px;
 }
 
-.main-title {
-    font-size: 1.15rem;
+.logo-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.flag-icon {
+    font-size: 20px;
+}
+
+.site-title {
+    font-size: 18px;
     font-weight: 700;
+    color: var(--primary);
 }
 
 .header-controls {
     display: flex;
     gap: 8px;
-    align-items: center;
 }
 
-.circle-btn {
-    width: 34px;
-    height: 34px;
-    border-radius: 50%;
+.icon-btn, .lang-btn {
+    background: var(--bg-color);
     border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
     color: var(--text-main);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    font-size: 0.95rem;
-}
-
-.lang-btn {
+    border-radius: 8px;
     padding: 6px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    font-weight: 700;
-    font-size: 0.85rem;
+    font-size: 14px;
+    font-weight: 600;
     cursor: pointer;
 }
 
-/* ЖИВОЙ ПОИСК И СЕЛЕКТОРЫ */
-.search-container {
-    position: relative;
-    margin-bottom: 8px;
+.header-actions {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 10px;
 }
 
-.search-input {
+.select-wrapper {
+    flex: 1;
+    position: relative;
+}
+
+.village-select {
     width: 100%;
-    padding: 10px 36px 10px 12px;
+    padding: 10px;
     border-radius: 8px;
     border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
+    background-color: var(--bg-color);
     color: var(--text-main);
-    font-size: 0.95rem;
-    outline: none;
+    font-size: 15px;
+    font-weight: 600;
+    appearance: none;
+}
+
+.search-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+#searchInput {
+    width: 100%;
+    padding: 10px 35px 10px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-size: 15px;
 }
 
 .clear-btn {
     position: absolute;
     right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
     background: none;
     border: none;
     color: var(--text-muted);
-    font-size: 1.1rem;
+    font-size: 18px;
     cursor: pointer;
-}
-
-.filter-controls-row {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 8px;
-}
-
-.village-select-wrapper {
-    flex: 1;
-}
-
-.village-select, .nav-select {
-    width: 100%;
-    padding: 8px 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    font-size: 0.9rem;
-    font-weight: 600;
-    outline: none;
-}
-
-.view-mode-btn {
-    padding: 0 12px;
-    border-radius: 6px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    font-size: 1.1rem;
-    cursor: pointer;
-}
-
-/* СИНЯЯ ЛЕНТА КАТЕГОРИЙ (ФЛАГ РК) */
-.tabs-container {
-    display: flex;
-    gap: 6px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-    margin-bottom: 4px;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-}
-
-.tabs-container::-webkit-scrollbar {
     display: none;
 }
 
-.tab {
-    padding: 6px 14px;
-    border-radius: 20px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    color: var(--text-main);
+/* ЛЕНТА КАТЕГОРИЙ */
+.labs-scroll-container {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    overflow-x: auto;
     white-space: nowrap;
-    font-size: 0.85rem;
+    -webkit-overflow-scrolling: touch;
+}
+
+.labs-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.lab-btn {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
+    box-shadow: var(--shadow);
 }
 
-.tab.active {
-    background-color: var(--accent-kz-blue);
+.lab-btn.active {
+    background-color: var(--primary);
     color: #ffffff;
-    border-color: var(--accent-kz-blue);
+    border-color: var(--primary);
 }
 
-/* АЛФАВИТНЫЙ РЯД */
+/* АЛФАВИТ */
 .alphabet-container {
     display: flex;
-    gap: 4px;
+    gap: 6px;
+    padding: 0 12px 12px 12px;
     overflow-x: auto;
-    padding: 4px 0;
 }
 
-.alphabet-container::-webkit-scrollbar { display: none; }
+.alphabet-container::-webkit-scrollbar {
+    display: none;
+}
 
 .letter-btn {
-    padding: 4px 10px;
-    border-radius: 4px;
+    background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
     color: var(--text-main);
-    font-size: 0.8rem;
+    min-width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    font-size: 14px;
     font-weight: 600;
     cursor: pointer;
 }
 
 .letter-btn.active {
-    background-color: var(--text-main);
-    color: var(--bg-header);
+    background-color: var(--accent);
+    color: #333333;
+    border-color: var(--accent);
 }
 
-/* ======================================================================
-   3. СЕТКА И АДАПТИВНЫЕ КАРТОЧКИ КОНТАКТОВ
-   ====================================================================== */
-.contacts-container {
-    padding: 12px;
+/* КАРТОЧКИ КОНТАКТОВ */
+.content-area {
+    padding: 4px 0;
+}
+
+.contacts-grid {
+    padding: 0 12px;
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
-.card {
+.contact-card {
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
-    border-radius: 10px;
+    border-radius: 12px;
     padding: 12px;
-    box-shadow: 0 1px 4px rgba(0,0,0,0.02);
+    box-shadow: var(--shadow);
 }
 
 .card-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    margin-bottom: 8px;
-}
-
-.card-category-badge {
-    font-size: 0.75rem;
-    font-weight: 700;
-    color: var(--accent-kz-blue);
-    text-transform: uppercase;
+    gap: 8px;
+    margin-bottom: 6px;
 }
 
 .card-title {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-top: 2px;
-}
-
-.fav-star {
-    background: none;
-    border: none;
-    font-size: 1.35rem;
-    color: var(--border-color);
-    cursor: pointer;
-    line-height: 1;
-}
-
-.fav-star.active {
-    color: var(--accent-kz-gold);
-}
-
-.card-body {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    margin-bottom: 10px;
-    font-size: 0.9rem;
-}
-
-.card-phone {
+    font-size: 16px;
     font-weight: 700;
     color: var(--text-main);
+}
+
+.fav-star-btn {
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--accent);
+}
+
+.card-meta {
+    font-size: 14px;
+    color: var(--text-muted);
+    margin-bottom: 4px;
+}
+
+.card-desc {
+    font-size: 14px;
+    color: var(--text-main);
+    margin-bottom: 10px;
 }
 
 .card-actions {
@@ -292,72 +256,61 @@ body {
     gap: 8px;
 }
 
-.btn {
+.action-btn {
     flex: 1;
-    padding: 10px;
-    border-radius: 6px;
-    border: none;
-    font-weight: 700;
-    font-size: 0.9rem;
     text-align: center;
     text-decoration: none;
-    cursor: pointer;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 700;
 }
 
-.btn-call {
-    background-color: var(--accent-kz-blue);
+.call-btn {
+    background-color: var(--primary);
     color: #ffffff;
 }
 
-.btn-wa {
-    background-color: var(--accent-wa-green);
+.wa-btn {
+    background-color: #25d366;
     color: #ffffff;
 }
 
-.card-footer-links {
-    margin-top: 8px;
-    text-align: right;
-}
-
-.report-err {
-    font-size: 0.75rem;
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
     color: var(--text-muted);
-    text-decoration: none;
+    font-size: 15px;
 }
 
-/* ======================================================================
-   4. НИЖНЯЯ ПАНЕЛЬ СЛУЖЕБНЫХ КНОПОК ШАПКИ
-   ====================================================================== */
-.floating-actions-bar {
+/* ПОДВАЛ С КНОПКАМИ */
+.site-footer {
     position: fixed;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: var(--bg-header);
+    background-color: var(--card-bg);
     border-top: 1px solid var(--border-color);
+    padding: 10px 12px;
     display: flex;
-    padding: 8px 12px;
-    gap: 12px;
-    z-index: 999;
+    gap: 10px;
+    z-index: 90;
+    box-shadow: 0 -4px 12px rgba(0,0,0,0.05);
 }
 
-.action-bar-btn {
+.footer-btn {
     flex: 1;
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
     padding: 12px;
-    border-radius: 8px;
-    border: none;
-    color: #ffffff;
+    border-radius: 10px;
+    font-size: 14px;
     font-weight: 700;
-    font-size: 0.95rem;
     cursor: pointer;
 }
 
-.fav-bar-btn { background-color: var(--accent-kz-gold); }
-.add-bar-btn { background-color: #1f4e79; }
-
-/* ======================================================================
-   5. МОДАЛЬНЫЕ ОКНА И ИНТЕРФЕЙСЫ ИНСТРУКЦИИ
-   ====================================================================== */
+/* МОДАЛЬНЫЕ ОКНА */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -365,113 +318,105 @@ body {
     width: 100%;
     height: 100%;
     background-color: rgba(0,0,0,0.5);
-    display: flex;
-    align-items: center;
+    display: none;
     justify-content: center;
+    align-items: center;
     padding: 16px;
-    z-index: 2000;
+    z-index: 200;
 }
 
-.modal-content {
+.modal-card {
     background-color: var(--card-bg);
-    border-radius: 12px;
+    border-radius: 16px;
     width: 100%;
     max-width: 400px;
     padding: 16px;
-    max-height: 85vh;
-    overflow-y: auto;
+    box-shadow: var(--shadow);
 }
 
-.welcome-header, .form-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 8px;
+.modal-header-block {
     margin-bottom: 12px;
 }
 
-.welcome-lang-row {
-    display: flex;
-    gap: 4px;
-}
-
 .modal-lang-toggle {
-    padding: 4px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
-    color: var(--text-main);
-    font-weight: 700;
-    font-size: 0.75rem;
-    cursor: pointer;
-}
-
-.modal-lang-toggle.lang-btn-active {
-    background-color: var(--accent-kz-blue);
-    color: #ffffff;
-}
-
-.welcome-body-text {
-    font-size: 0.9rem;
     display: flex;
-    flex-direction: column;
-    gap: 12px;
+    gap: 6px;
+    margin-bottom: 8px;
+}
+
+.modal-lang-btn {
+    background: var(--bg-color);
+    border: 1px solid var(--border-color);
+    color: var(--text-main);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.modal-lang-btn.active {
+    background-color: var(--primary);
+    color: #ffffff;
+    border-color: var(--primary);
+}
+
+.modal-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: var(--primary);
+}
+
+/* КРАСИВЫЕ КАРТОЧКИ ШАГОВ ПРИВЕТСТВИЯ */
+.info-step-block {
+    background-color: var(--bg-color);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    color: var(--text-main);
+    border-left: 4px solid var(--accent);
+}
+
+.modal-action-btn {
+    width: 100%;
+    background-color: var(--primary);
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    margin-top: 8px;
+}
+
+.modal-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 16px;
 }
 
-.info-step-block {
-    background-color: var(--bg-main);
-    padding: 10px;
-    border-radius: 8px;
-    border-left: 4px solid var(--accent-kz-blue);
+.close-modal-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--text-muted);
+    cursor: pointer;
 }
 
-.info-step-title {
-    font-weight: 700;
-    margin-bottom: 4px;
+.modal-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
 }
 
-.btn-welcome-close, .btn-form-submit {
+.modal-form input {
     width: 100%;
     padding: 12px;
     border-radius: 8px;
-    border: none;
-    background-color: var(--accent-kz-blue);
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1rem;
-    cursor: pointer;
-}
-
-.close-x-btn {
-    background: none;
-    border: none;
-    color: var(--text-main);
-    font-size: 1.2rem;
-    cursor: pointer;
-}
-
-.form-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 10px;
-    border-radius: 6px;
     border: 1px solid var(--border-color);
-    background-color: var(--bg-main);
+    background-color: var(--bg-color);
     color: var(--text-main);
-    outline: none;
-}
-
-.form-wa-checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 14px;
-    font-size: 0.9rem;
-}
-
-.no-results {
-    text-align: center;
-    padding: 30px;color: var(--text-muted);
+    font-size: 15px;
 }
