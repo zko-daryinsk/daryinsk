@@ -23,7 +23,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         // Скачиваем языковой файл с жесткой очисткой невидимого мусора BOM
         try {
-            const r = await fetch("languages.json?v=" + Date.now());
+            const r = await fetch("/daryinsk/languages.json?v=" + Date.now());
             const text = await r.text();
             const cleanText = text.trim().replace(/^\uFEFF/, "");
             langRes = JSON.parse(cleanText);
@@ -45,7 +45,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
 
         try {
-            const r = await fetch("baza_darinsk.txt?v=" + Date.now());
+            const r = await fetch("/daryinsk/baza_darinsk.txt?v=" + Date.now());
             dataRes = await r.text();
         } catch (e) {
             console.error("Критическая ошибка загрузки базы контактов.", e);
