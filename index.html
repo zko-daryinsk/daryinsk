@@ -1,76 +1,79 @@
 <!DOCTYPE html>
-<html lang="ru" class="notranslate" translate="no">
+<html lang="ru" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="google" content="notranslate">
-    <title>Справочник Дарьинского Округа</title>
-    <link rel="stylesheet" href="style.css?v=2026">
+    <title>Справочник</title>
+    <link rel="stylesheet" href="style.css?v=2095">
 </head>
-<body class="notranslate">
-    <div class="sticky-header">
-        <div class="header-top-line">
-            <h1 id="siteTitle" class="main-title">...</h1>
+<body>
+    <header class="site-header">
+        <div class="header-top">
+            <div class="logo-area">
+                <span class="flag-icon">🇰🇿</span>
+                <h1 id="siteTitle" class="site-title">Справочник</h1>
+            </div>
             <div class="header-controls">
-                <button id="btnInfo" class="circle-btn" type="button">ℹ️</button>
-                <button id="themeToggle" class="circle-btn" type="button">🌙</button>
-                <button id="langToggle" class="lang-btn" type="button">KZ</button>
+                <button id="themeToggle" class="icon-btn" title="Смена темы">🌙</button>
+                <button id="langToggle" class="lang-btn">KZ</button>
             </div>
         </div>
-        <div class="search-container">
-            <input type="text" id="searchInput" class="search-input" placeholder="..." autocomplete="off" inputmode="search">
-            <button id="clearSearch" class="clear-btn" type="button" style="display: none;">✕</button>
-        </div>
-        <div class="filter-controls-row">
-            <div class="village-select-wrapper">
+        <div class="header-actions">
+            <div class="select-wrapper">
                 <select id="villageSelect" class="village-select"></select>
             </div>
-            <button id="viewModeToggle" class="view-mode-btn" type="button">📱</button>
+            <button id="btnInfo" class="icon-btn info-btn" title="Инструкция">ℹ️</button>
         </div>
-        <div id="tabsContainer" class="tabs-container" style="display: flex;"></div>
-        <div id="selectContainer" class="select-container" style="display: none;"></div>
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" placeholder="Поиск..." autocomplete="off">
+            <button id="clearSearch" class="clear-btn">&times;</button>
+        </div>
+    </header>
+
+    <main class="content-area">
+        <nav id="labsContainer" class="labs-scroll-container"></nav>
         <div id="alphabetContainer" class="alphabet-container"></div>
-    </div>
-    <div id="contactsContainer" class="contacts-container"></div>
-    <div class="floating-actions-bar">
-        <button id="favTabBtn" class="action-bar-btn fav-bar-btn" type="button"><span>...</span></button>
-        <button id="addContactBtn" class="action-bar-btn add-bar-btn" type="button"><span>...</span></button>
-    </div>
-    <div id="welcomeModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content welcome-card">
-            <div class="welcome-header">
-                <h2 id="welcomeModalTitle" class="welcome-main-title">...</h2>
-                <div class="welcome-lang-row">
-                    <button id="m-btn-ru" class="modal-lang-toggle" type="button">RU</button>
-                    <button id="m-btn-kz" class="modal-lang-toggle" type="button">KZ</button>
+        <div id="contactsContainer" class="contacts-grid"></div>
+    </main>
+
+    <footer class="site-footer">
+        <button id="favTabBtn" class="footer-btn">⭐ Избранные</button>
+        <button id="addContactBtn" class="footer-btn">➕ Добавить</button>
+    </footer>
+
+    <!-- ОКНО ПРИВЕТСТВИЯ С ОДНИМ ЕДИНЫМ КАРМАШКОМ ДЛЯ ТЕКСТА JSON -->
+    <div id="welcomeModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-header-block">
+                <div class="modal-lang-toggle">
+                    <button id="m-btn-ru" class="modal-lang-btn active">RU</button>
+                    <button id="m-btn-kz" class="modal-lang-btn">KZ</button>
                 </div>
+                <h2 id="welcomeModalTitle" class="modal-title">Как пользоваться справочником?</h2>
             </div>
-            <div id="welcomeModalText" class="welcome-body-text"></div>
-            <button id="btnWelcomeAction" class="btn-welcome-close" type="button">...</button>
+            <div id="welcomeModalText" class="modal-body-content"></div>
+            <button id="btnWelcomeAction" class="modal-action-btn">Понятно</button>
         </div>
     </div>
-    <div id="addModal" class="modal-overlay" style="display: none;">
-        <div class="modal-content form-card">
-            <div class="form-header">
-                <h2 id="modalTitle">...</h2>
-                <button id="closeModal" class="close-x-btn" type="button">✕</button>
+
+    <!-- ОКНО ДОБАВЛЕНИЯ КОНТАКТА -->
+    <div id="addModal" class="modal-overlay">
+        <div class="modal-card">
+            <div class="modal-card-header">
+                <h3 class="modal-title">Добавить контакт</h3>
+                <button id="closeModal" class="close-modal-btn">&times;</button>
             </div>
-            <form id="contactForm" autocomplete="off">
-                <select id="formCategorySelect" class="form-input"></select>
-                <input type="text" id="formTitle" class="form-input" required placeholder="Название / Имя мастера *">
-                <input type="tel" id="formPhone" class="form-input" required placeholder="Телефон (например: 7771234567) *">
-                <input type="text" id="formName" class="form-input" placeholder="Имя контактного лица (необязательно)">
-                <input type="text" id="formDesc" class="form-input" placeholder="Описание услуг / Описание товара">
-                <input type="text" id="formAddress" class="form-input" placeholder="Адрес / Посёлок / Ориентир">
-                <input type="text" id="formSchedule" class="form-input" placeholder="⌛ Время работы (например: 09:00 - 21:00)">
-                <div class="form-wa-checkbox-row">
-                    <input type="checkbox" id="formHasWa" checked>
-                    <label id="lblHasWa" for="formHasWa">...</label>
-                </div>
-                <button id="submitContactForm" class="btn-form-submit" type="submit">...</button>
+            <form id="contactForm" class="modal-form">
+                <input type="text" id="formName" placeholder="Ваше имя или услуга" required>
+                <input type="tel" id="formPhone" placeholder="Номер телефона (например: 7705...)" required>
+                <button type="submit" class="modal-action-btn">Отправить заявку</button>
             </form>
         </div>
     </div>
-    <script src="script.js?v=2090"></script>
+
+    <!-- ВСТРОЕННЫЙ АВТОСБРОС КЭША ПО СЕКУНДАМ -->
+    <script>
+        document.write('<script src="script.js?v=' + Date.now() + '"><\\/script>');
+    </script>
 </body>
 </html>
