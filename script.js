@@ -50,7 +50,7 @@ const categoryTranslations = {
 };
 document.addEventListener("DOMContentLoaded", async () => {
     try {
-        
+        // ЧИСТАЯ ЗАГРУЗКА ТОЛЬКО БАЗЫ ДАННЫХ ОТ ПИТОНА БЕЗ ЛИШНИХ ФАЙЛОВ
         const r = await fetch("/daryinsk/baza_darinsk.txt?v=" + Date.now());
         const dataRes = await r.text();
 
