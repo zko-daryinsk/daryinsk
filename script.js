@@ -297,7 +297,139 @@ window.addEventListener("touchend", function(e) {
         }
     }
 }, { passive: true });
-
 function openModal(id) { const m = document.getElementById(id); if (m) m.style.display = "flex"; }
 function closeModal(id, e) { if (e) e.stopPropagation(); const m = document.getElementById(id); if (m) m.style.display = "none"; }
-function copyNumberOnly(n) { navigator.clipboard.writeText(n).then(function() { alert(dict[window.app.currentLang].numCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = n; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].numC
+function copyNumberOnly(n) { navigator.clipboard.writeText(n).then(function() { alert(dict[window.app.currentLang].numCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = n; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].numCopied); }); }
+function copyToClipboard(t) { navigator.clipboard.writeText(t).then(function() { alert(dict[window.app.currentLang].shareCopied); }).catch(function() { var el = document.createElement("textarea"); el.value = t; document.body.appendChild(el); el.select(); document.execCommand("copy"); document.body.removeChild(el); alert(dict[window.app.currentLang].shareCopied); }); }
+function toggleFavorite(p) { var f = JSON.parse(localStorage.getItem("dar_fav_numbers") || "[]"); f = f.includes(p) ? f.filter(function(x) { return x !== p; }) : [...f, p]; localStorage.setItem("dar_fav_numbers", JSON.stringify(f)); renderCards(); }
+function reportErrorWithConfirm(c, t, p) { if (confirm(dict[window.app.currentLang].confirmErr)) { var msg = "Ошибка в контакте:\nКатегория: " + c + "\nНазвание: " + t + "\nТелефон: " + p; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent(msg); } }
+function buildFormCategorySelect(cats) { var s = document.getElementById("formCatSelect"); if (!s) return; s.innerHTML = ""; cats.forEach(function(c) { var o = document.createElement("option"); o.value = c; o.innerText = (categoryTranslations[c] && categoryTranslations[c][window.app.currentLang]) ? categoryTranslations[c][window.app.currentLang] : c; s.appendChild(o); }); var co = document.createElement("option"); co.value = "CUSTOM_OPTION"; co.innerText = dict[window.app.currentLang].mCustomOpt; s.appendChild(co); toggleCustomCategoryField(); }
+function toggleCustomCategoryField() { var s = document.getElementById("formCatSelect"); var w = document.getElementById("customCatWrapper"); if (s && w) w.style.display = (s.value === "CUSTOM_OPTION") ? "block" : "none"; }
+function sendNewContact() { var vSel = document.getElementById("formVillageSelect").value; var sv = document.getElementById("formCatSelect").value; var cat = (sv === "CUSTOM_OPTION") ? document.getElementById("formCatCustom").value.trim() : sv; var rp = document.getElementById("formPhone").value.trim(); var t = document.getElementById("formName").value.trim(); var pd = getClean10Digits(rp); if (!cat || !pd || !t) { alert(dict[window.app.currentLang].mAlert); return; } var hasWA = document.getElementById("formHasWA").checked; var line = cat.toUpperCase() + " | " + t + " | " + pd + " | " + document.getElementById("formFio").value.trim() + " | " + document.getElementById("formDesc").value.trim() + " | " + document.getElementById("formLoc").value.trim() + " | " + (hasWA ? "$" : "NO_WA"); var btn = document.getElementById("btnSubmitForm"); btn.disabled = true; btn.innerText = "..."; window.location.href = "whatsapp://send?phone=" + adminPhone + "&text=" + encodeURIComponent("Здравствуйте! Прошу добавить контакт.\n\nПОСЁЛОК: " + vSel.toUpperCase() + "\nБЛОКНОТ: baza_" + vSel + ".txt\nСТРОКА:\n" + line); setTimeout(function() { btn.disabled = false; btn.innerText = dict[window.app.currentLang].mSubmit; closeModal("addModal"); }, 2000); }
+function setLang(l) {
+    window.app.currentLang = l; document.querySelectorAll(".lang-btn").forEach(function(b) { b.classList.remove("active"); });
+    var ab = document.getElementById("btn-" + l); if (ab) ab.classList.add("active");
+    document.getElementById("siteTitle").innerText = dict[l].title; document.getElementById("searchInput").placeholder = dict[l].search;
+    document.getElementById("btnReset").innerText = dict[l].reset; document.getElementById("btnMainAction").innerText = dict[l].mainBtn;
+    document.getElementById("btnFavAction").innerText = dict[l].favBtn; document.getElementById("modalTitle").innerText = dict[l].mTitle;
+    document.getElementById("lblHasWA").innerText = dict[l].lblHasWA; document.getElementById("btnSubmitForm").innerText = dict[l].mSubmit;
+    document.getElementById("btnCancelForm").innerText = l === "ru" ? "Отмена" : "Бас тарту";
+    document.getElementById("btnViewToggle").innerText = (window.app.currentViewMode === "tabs") ? dict[l].viewTabs : dict[l].viewSelect;
+    var categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
+        renderTabs(categories); renderSelectMenu(categories); renderCards();
+        buildFormCategorySelect(categories);
+    
+}
+
+function showWelcomeModal() {
+    if (document.getElementById("welcomeModal")) return;
+    var w = document.createElement("div"); w.id = "welcomeModal"; w.className = "modal"; w.style.display = "flex";
+    w.innerHTML = "<div class='modal-content' style='max-width: 450px; padding: 20px 25px; text-align: left;'><div style='display:flex; justify-content:flex-end; gap:6px; margin-bottom:10px;'><span class='lang-btn " + (window.app.currentLang === "ru" ? "active" : "") + "' style='font-size:12px; padding:2px 8px; border-radius:4px; cursor:pointer;' onclick=\"changeWelcomeLang('ru')\">RU</span><span class='lang-btn " + (window.app.currentLang === "kz" ? "active" : "") + "' style='font-size:12px; padding:2px 8px; border-radius:4px; cursor:pointer;' onclick=\"changeWelcomeLang('kz')\">KZ</span></div><h2 id='welcomeTitleTxt' style='margin-bottom:12px; font-size:22px; font-weight:700;'>Добро пожаловать!</h2><div id='welcomeBodyTxt' style='font-size:14px; color:#4a5568; line-height:1.6; margin-bottom:20px;'></div><button id='welcomeCloseBtn' class='btn-action-main' style='margin:0; width:100%; background:#0b66ff;' onclick=\"document.getElementById('welcomeModal').remove()\">Открыть справочник / Анықтамалықты ашу</button></div>";
+    document.body.appendChild(w); changeWelcomeLang(window.app.currentLang);
+}
+function changeWelcomeLang(l) {
+    setLang(l); const t = document.getElementById("welcomeTitleTxt"); const b = document.getElementById("welcomeBodyTxt"); if (!t || !b) return;
+    if (l === "ru") { t.innerText = "Добро пожаловать!"; b.innerHTML = "Прошу прощения, если чья-то фамилия или номер записаны неверно. Если вы нашли ошибку, нажмите на кнопку с треугольником (⚠️) на нужной карточке, чтобы прислать верные сведения.<br><br>💡 <b>Подсказка по поиску:</b> Введите любое имя или услугу. Поиск проверит все разделы разом! Если не можете найти человека по короткому имени (Паша, Женя), попробуйте ввести полное (Павел, Евгений)."; }
+    else { t.innerText = "Қош келдіңіздер!"; b.innerHTML = "Егер біреудің тегі немесе нөмірі қате жазылса, кешірім өтінемін. Қате тапсаңыз, дұрыс мәліметті жіберу үшін тиісті карточкадағы үшбұрыш (⚠️) батырмасын басыңыз.<br><br>💡 <b>Іздеу бойынша кеңес:</b> Кез келген есімді немесе қызметті енгізіңіз. Іздеу барлық бөлімдерді бірден тексереді! Егер адамды қысқа атымен (Паша, Женя) таба алмасаңыз, толық атын (Павел, Евгений) енгізіп көріңіз."; }
+    const wm = document.getElementById("welcomeModal"); if (wm) { wm.querySelectorAll(".lang-btn").forEach(function(x) { x.classList.remove("active"); if (x.innerText.toLowerCase() === l) x.classList.add("active"); }); }
+}
+
+function resetSearch() {
+    const sIn = document.getElementById("searchInput"); if (sIn) sIn.value = "";
+    const bRes = document.getElementById("btnReset"); if (bRes) bRes.style.display = "none";
+    const tRow = document.querySelector(".categories-control-row"); if (tRow) tRow.style.display = "flex";
+    const sTitle = document.getElementById("searchTitleContainer"); if (sTitle) sTitle.style.display = "none";
+    renderCards();
+    setTimeout(function() { const aTab = document.querySelector(".tab.active"); if (aTab) aTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" }); }, 50);
+}
+
+function renderAlphabet(uniqueLetters) {
+    const container = document.getElementById("alphabetContainer"); if (!container) return; container.innerHTML = "";
+    if (window.app.activeCategory !== "ЖИТЕЛИ" || document.getElementById("searchInput").value.length > 0) { container.style.display = "none"; return; }
+    container.style.display = "flex";
+    uniqueLetters.forEach(function(letter) {
+        const btn = document.createElement("button"); btn.className = "letter-btn " + (letter === window.app.activeLetter ? "active" : ""); btn.innerText = letter;
+        btn.onclick = function() { window.app.activeLetter = (window.app.activeLetter === letter) ? "" : letter; renderCards(); }; container.appendChild(btn);
+    });
+}
+
+function toggleCategoriesView() {
+    const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return;
+    if (window.app.currentViewMode === "tabs") { window.app.currentViewMode = "select"; tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; }
+    else { window.app.currentViewMode = "tabs"; tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; }
+    localStorage.setItem("dar_view_mode", window.app.currentViewMode);
+}
+function restoreViewMode() { const saved = localStorage.getItem("dar_view_mode"); if (saved) { window.app.currentViewMode = saved; } const tabsCont = document.getElementById("tabsContainer"); const selectCont = document.getElementById("categoriesMainSelect"); const toggleBtn = document.getElementById("btnViewToggle"); if (!tabsCont || !selectCont || !toggleBtn) return; if (window.app.currentViewMode === "select") { tabsCont.style.display = "none"; selectCont.style.display = "block"; toggleBtn.innerText = dict[window.app.currentLang].viewSelect; } else { tabsCont.style.display = "flex"; selectCont.style.display = "none"; toggleBtn.innerText = dict[window.app.currentLang].viewTabs; } }
+function handleSelectCategoryChange() { const mainSel = document.getElementById("categoriesMainSelect"); if (mainSel) { window.app.activeCategory = mainSel.value; window.app.activeLetter = ""; renderCards(); } }
+function renderTabs(categories) { var container = document.getElementById("tabsContainer"); if (!container) return; container.innerHTML = ""; categories.forEach(function(cat) { var btn = document.createElement("button"); btn.className = "tab " + (cat === window.app.activeCategory ? "active" : ""); btn.innerText = (categoryTranslations[cat] && categoryTranslations[cat][window.app.currentLang]) ? categoryTranslations[cat][window.app.currentLang] : cat; btn.onclick = function() { window.app.activeCategory = cat; window.app.activeLetter = ""; if (document.getElementById("categoriesMainSelect")) document.getElementById("categoriesMainSelect").value = cat; document.querySelectorAll(".tab").forEach(function(t) { t.classList.remove("active"); }); btn.classList.add("active"); renderCards(); }; container.appendChild(btn); }); }
+function renderSelectMenu(categories) { var select = document.getElementById("categoriesMainSelect"); if (!select) return; select.innerHTML = ""; categories.forEach(function(cat) { var opt = document.createElement("option"); opt.value = cat; opt.innerText = (categoryTranslations[cat] && categoryTranslations[cat][window.app.currentLang]) ? categoryTranslations[cat][window.app.currentLang] : cat; select.appendChild(opt); }); select.value = window.app.activeCategory; }
+window.onscroll = function() { var btnTop = document.getElementById("btnTop"); if (btnTop) btnTop.style.display = (document.body.scrollTop > 300 || document.documentElement.scrollTop > 300) ? "flex" : "none"; };
+function scrollToTop() { window.scrollTo({ top: 0, behavior: "smooth" }); }
+function toggleTheme() { document.body.classList.toggle("dark-mode"); }
+function switchToFavoritesCategory() {
+    window.app.activeCategory = "FAVORITES";
+    window.app.activeLetter = "";
+    document.querySelectorAll(".tab").forEach(function(t) { 
+        t.classList.remove("active"); 
+    });
+    const fTab = document.getElementById("btnFavAction");
+    if (fTab) { fTab.style.transform = "scale(0.98)"; setTimeout(function() { fTab.style.transform = "none"; }, 100); }
+    renderCards();
+}
+
+function buildFormCategorySelect(cats) {
+    var s = document.getElementById("formCatSelect"); 
+    if (!s) return; s.innerHTML = "";
+    cats.forEach(function(c) {
+        if (c === "FAVORITES") return;
+        var o = document.createElement("option"); o.value = c;
+        o.innerText = (categoryTranslations[c] && categoryTranslations[c][window.app.currentLang]) ? categoryTranslations[c][window.app.currentLang] : c;
+        s.appendChild(o);
+    });
+    var co = document.createElement("option"); co.value = "CUSTOM_OPTION";
+    co.innerText = dict[window.app.currentLang].mCustomOpt;
+    s.appendChild(co);
+    toggleCustomCategoryField();
+}
+function injectExtendedCategoryIcons() {
+    const ext = {
+        "БЛАГОУСТРОЙСТВО": { "ru": "🌳 БЛАГОУСТРОЙСТВО", "kz": "🌳 АБАТТАНДЫРУ" },
+        "ВЫПЕЧКА": { "ru": "🥐 ВЫПЕЧКА / ТОРТЫ", "kz": "🥐 НАН ӨНІМДЕРІ" },
+        "КАФЕ": { "ru": "☕ КАФЕ / ТОЙХАНА", "kz": "☕ КАФЕ / ТОЙХАНА" },
+        "КОВРЫ": { "ru": "🧹 СТИРКА КОВРОВ", "kz": "🧹 КІЛЕМ ЖУУ" },
+        "КОРМА": { "ru": "🌾 КОРМА / ЗЕРНО", "kz": "🌾 ЖЕМ-ШӨП" },
+        "СКВАЖИНЫ": { "ru": "🚰 СКВАЖИНЫ / ВОДА", "kz": "🚰 ҚҰДЫҚ БҰРҒЫЛАУ" },
+        "ШКОЛЫ": { "ru": "🏫 ШКОЛЫ / ЛИЦЕИ", "kz": "🏫 МЕКТЕПТЕР" }
+    };
+    for (let key in ext) {
+        if (!categoryTranslations[key]) { categoryTranslations[key] = ext[key]; }
+    }
+}
+window.addEventListener("touchstart", function(e) {
+    touchStartX = e.changedTouches.screenX;
+    touchStartY = e.changedTouches.screenY;
+}, { passive: true });
+
+window.addEventListener("touchend", function(e) {
+    const sIn = document.getElementById("searchInput");
+    if (window.app.currentViewMode !== "tabs" || (sIn && sIn.value.length > 0)) return;
+    if (document.getElementById("welcomeModal") || (document.getElementById("addModal") && document.getElementById("addModal").style.display === "flex")) return;
+    const diffX = touchStartX - e.changedTouches.screenX;
+    const diffY = touchStartY - e.changedTouches.screenY;
+    if (Math.abs(diffX) > 100 && Math.abs(diffY) < 45) {
+        const categories = [...new Set(window.app.allContacts.map(function(i) { return i.category; }))].sort(function(a, b) { return a.localeCompare(b); });
+        let idx = categories.indexOf(window.app.activeCategory);
+        if (categories.length > 0) {
+            if (diffX > 0) { idx = (idx < categories.length - 1) ? idx + 1 : 0; }
+            else if (diffX < 0) { idx = (idx > 0) ? idx - 1 : categories.length - 1; }
+            window.app.activeCategory = categories[idx];
+            window.app.activeLetter = "";
+            setLang(window.app.currentLang);
+            window.scrollTo({ top: 0, behavior: "instant" });
+            setTimeout(function() {
+                const activeTab = document.querySelector(".tab.active");
+                if (activeTab) activeTab.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+            }, 50);
+        }
+    }
+}, { passive: true });
